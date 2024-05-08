@@ -42,4 +42,13 @@ export class PrismaUsersRepository implements UsersRepository {
             bio: user.bio
         };
     }
+
+    async createMagicLink(user: User, token: string): Promise<void> {
+        await this.prisma.magicLink.create({
+            data: {
+                userId: user.id,
+                token
+            }
+        });
+    }
 }
