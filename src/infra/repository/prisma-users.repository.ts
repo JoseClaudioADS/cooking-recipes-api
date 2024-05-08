@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { MagicLink } from "../../core/users/entity/magic-link";
 import { User } from "../../core/users/entity/user";
 import { CreateUserRepositoryInput, CreateUserRepositoryOutput } from "../../core/users/repository/types/create-user.repository.type";
 import { UsersRepository } from "../../core/users/repository/users.repository";
@@ -50,5 +51,33 @@ export class PrismaUsersRepository implements UsersRepository {
                 token
             }
         });
+    }
+
+    async deleteMagicLink(user: User): Promise<void> {
+        await this.prisma.magicLink.delete({
+            where: {
+                userId: user.id
+            }
+        });
+    }
+
+    async findMagicLinkByEmail(email: string): Promise<MagicLink | null> {
+        const magicLink = await this.prisma.magicLink.findFirst({
+            where: {
+                user: {
+                    email
+                }
+            }
+        });
+
+        if (!magicLink) {
+            return null;
+        }
+
+        return {
+            token: magicLink.token,
+            userId: magicLink.userId,
+            createdAt: magicLink.createdAt
+        };
     }
 }

@@ -29,7 +29,7 @@ describe("CreateUserUseCase", () => {
         const input: CreateUserInput = {
             name: faker.person.fullName(),
             bio: faker.person.bio(),
-            email: faker.internet.email()
+            email: faker.internet.email().toLocaleLowerCase()
         };
 
         it("should create a user", async () => {

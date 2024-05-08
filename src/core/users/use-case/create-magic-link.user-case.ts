@@ -6,7 +6,7 @@ import { UserByEmailNotFoundError } from "../errors/user-by-email-not-found.erro
 import { UsersRepository } from "../repository/users.repository";
 
 const createMagicLinkSchema = z.object({
-    email: z.string().email()
+    email: z.string().email().transform(email => email.toLowerCase())
 });
 
 export type CreateMagicLinkInput = z.infer<typeof createMagicLinkSchema>;
@@ -29,6 +29,12 @@ export class CreateMagicLinkUseCase {
 
         if (!user) {
             throw new UserByEmailNotFoundError(email);
+        }
+
+        const magicLinkDb = await this.usersRepository.findMagicLinkByEmail(email);
+
+        if (magicLinkDb) {
+            await this.usersRepository.deleteMagicLink(user);
         }
 
         const { magicLink, token } = CreateMagicLinkUseCase.generateMagicLink(user);

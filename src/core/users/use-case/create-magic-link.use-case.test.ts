@@ -15,7 +15,8 @@ describe("CreateMagicLinkUseCase", () => {
     beforeAll(() => {
         usersRepository = {
             findByEmail: vi.fn(),
-            createMagicLink: vi.fn()
+            createMagicLink: vi.fn(),
+            deleteMagicLink: vi.fn()
         } as unknown as UsersRepository;
 
         useCase = new CreateMagicLinkUseCase(usersRepository);
@@ -28,7 +29,7 @@ describe("CreateMagicLinkUseCase", () => {
     describe("given a valid input", () => {
 
         const input: CreateMagicLinkInput = {
-            email: faker.internet.email()
+            email: faker.internet.email().toLowerCase()
         };
 
         const userDb: User = {
@@ -42,12 +43,14 @@ describe("CreateMagicLinkUseCase", () => {
 
             vi.spyOn(usersRepository, "findByEmail").mockResolvedValueOnce(userDb);
             vi.spyOn(usersRepository, "createMagicLink").mockResolvedValueOnce();
+            vi.spyOn(usersRepository, "deleteMagicLink").mockResolvedValueOnce();
 
             const result = await useCase.execute(input);
 
             expect(result).toStrictEqual({
                 magicLink: expect.stringMatching(/^https?:\/\/./u)
             });
+            expect(usersRepository.deleteMagicLink).toHaveBeenCalledWith(userDb);
             expect(usersRepository.createMagicLink).toHaveBeenCalledWith(userDb, expect.any(String));
         });
 
@@ -57,6 +60,7 @@ describe("CreateMagicLinkUseCase", () => {
 
             await expect(useCase.execute(input)).rejects.toThrow(new UserByEmailNotFoundError(input.email));
 
+            expect(usersRepository.deleteMagicLink).not.toHaveBeenCalled();
             expect(usersRepository.createMagicLink).not.toHaveBeenCalled();
         });
     });
@@ -71,6 +75,7 @@ describe("CreateMagicLinkUseCase", () => {
             await expect(useCase.execute(input)).rejects.toThrow(ZodError);
 
             expect(usersRepository.findByEmail).not.toHaveBeenCalled();
+            expect(usersRepository.deleteMagicLink).not.toHaveBeenCalled();
             expect(usersRepository.createMagicLink).not.toHaveBeenCalled();
         });
     });
