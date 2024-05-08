@@ -9,7 +9,7 @@ export class UsersController {
 
     private readonly createUserUseCase: CreateUserUseCase;
 
-    constructor(private readonly usersRepository: UsersRepository) {
+    constructor(readonly usersRepository: UsersRepository) {
         this.createUserUseCase = new CreateUserUseCase(usersRepository);
     }
 

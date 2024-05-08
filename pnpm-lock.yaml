@@ -57,9 +57,15 @@ importers:
       eslint-config-eslint:
         specifier: ^10.0.0
         version: 10.0.0(eslint@9.2.0)
+      eslint-config-prettier:
+        specifier: ^9.1.0
+        version: 9.1.0(eslint@9.2.0)
       globals:
         specifier: ^15.1.0
         version: 15.1.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
       prisma:
         specifier: ^5.13.0
         version: 5.13.0
@@ -894,6 +900,12 @@ packages:
     resolution: {integrity: sha512-ejGeXkQLyAEqUBr6UE246sZBRqscQVuJOTuYLYIt+GaCrfRodLsoJ6/oXRHZumcLDbZYnZoXRpgYy8+NJ/UOOw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  eslint-config-prettier@9.1.0:
+    resolution: {integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==}
+    hasBin: true
+    peerDependencies:
+      eslint: '>=7.0.0'
+
   eslint-plugin-es-x@7.6.0:
     resolution: {integrity: sha512-I0AmeNgevgaTR7y2lrVCJmGYF0rjoznpDvqV/kIkZSZbZ8Rw3eu4cGlvBBULScfkSOCzqKbff5LR4CNrV7mZHA==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -1530,6 +1542,11 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
@@ -2793,6 +2810,10 @@ snapshots:
       - eslint
       - supports-color
 
+  eslint-config-prettier@9.1.0(eslint@9.2.0):
+    dependencies:
+      eslint: 9.2.0
+
   eslint-plugin-es-x@7.6.0(eslint@9.2.0):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@9.2.0)
@@ -3486,6 +3507,8 @@ snapshots:
       source-map-js: 1.2.0
 
   prelude-ls@1.2.1: {}
+
+  prettier@3.2.5: {}
 
   pretty-format@29.7.0:
     dependencies:

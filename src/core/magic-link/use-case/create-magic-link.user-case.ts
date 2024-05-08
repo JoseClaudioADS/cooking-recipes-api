@@ -1,9 +1,10 @@
 import { sign } from "jsonwebtoken";
 import * as z from "zod";
 import env from "../../../utils/env";
-import { User } from "../entity/user";
-import { UserByEmailNotFoundError } from "../errors/user-by-email-not-found.error";
-import { UsersRepository } from "../repository/users.repository";
+import { User } from "../../users/entity/user";
+import { UserByEmailNotFoundError } from "../../users/errors/user-by-email-not-found.error";
+import { UsersRepository } from "../../users/repository/users.repository";
+import { MagicLinkRepository } from "../repository/magic-link.repository";
 
 const createMagicLinkSchema = z.object({
     email: z.string().email().transform(email => email.toLowerCase())
@@ -20,7 +21,8 @@ export type CreateMagicLinkOutput = {
  */
 export class CreateMagicLinkUseCase {
 
-    constructor(private readonly usersRepository: UsersRepository) {}
+    constructor(private readonly usersRepository: UsersRepository,
+        private readonly magicLinkRepository: MagicLinkRepository) {}
 
     async execute(createMagicLinkInput: CreateMagicLinkInput): Promise<CreateMagicLinkOutput> {
         const { email } = createMagicLinkSchema.parse(createMagicLinkInput);
@@ -31,15 +33,15 @@ export class CreateMagicLinkUseCase {
             throw new UserByEmailNotFoundError(email);
         }
 
-        const magicLinkDb = await this.usersRepository.findMagicLinkByEmail(email);
+        const magicLinkDb = await this.magicLinkRepository.findByEmail(email);
 
         if (magicLinkDb) {
-            await this.usersRepository.deleteMagicLink(user);
+            await this.magicLinkRepository.deleteMagicLink(magicLinkDb.token);
         }
 
         const { magicLink, token } = CreateMagicLinkUseCase.generateMagicLink(user);
 
-        await this.usersRepository.createMagicLink(user, token);
+        await this.magicLinkRepository.createMagicLink(user, token);
 
         // TODO: send magic link
 
