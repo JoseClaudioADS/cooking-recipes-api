@@ -5,7 +5,10 @@ const createRecipeSchema = z.object({
     title: z.string().min(2),
     description: z.string().optional(),
     preparationTime: z.number().min(1),
-    ingredients: z.array(z.string().min(2)),
+    ingredients: z.array(z.object({
+        name: z.string().min(2),
+        quantity: z.string().min(1)
+    })),
     photoId: z.number().min(1),
     userId: z.number().min(1)
 });

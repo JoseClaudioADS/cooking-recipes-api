@@ -31,7 +31,13 @@ describe("CreateRecipeUseCase", () => {
             description: faker.lorem.paragraph(),
             photoId: faker.number.int(),
             preparationTime: faker.number.int(),
-            ingredients: [faker.lorem.sentence()],
+            ingredients: [{
+                name: faker.lorem.word(),
+                quantity: faker.lorem.word()
+            }, {
+                name: faker.lorem.word(),
+                quantity: faker.lorem.word()
+            }],
             userId: faker.number.int()
         };
 
