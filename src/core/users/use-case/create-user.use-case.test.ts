@@ -15,7 +15,7 @@ describe("CreateUserUseCase", () => {
         usersRepository = {
             createUser: vi.fn(),
             findByEmail: vi.fn()
-        };
+        } as unknown as UsersRepository;
 
         useCase = new CreateUserUseCase(usersRepository);
     });
