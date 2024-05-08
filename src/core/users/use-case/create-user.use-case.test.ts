@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { ZodError } from "zod";
 import { EmailAlreadyRegisteredError } from "../errors/email-already-registered.error";
 import { UsersRepository } from "../repository/users.repository";
 import { CreateUserInput, CreateUserUseCase } from "./create-user.use-case";
@@ -51,6 +52,21 @@ describe("CreateUserUseCase", () => {
 
             await expect(useCase.execute(input)).rejects.toThrow(new EmailAlreadyRegisteredError(input.email));
 
+            expect(usersRepository.createUser).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("given an invalid input", () => {
+
+        const input: CreateUserInput = {
+            name: "a",
+            email: "invalid-email"
+        };
+
+        it("should not create a user", async () => {
+            await expect(useCase.execute(input)).rejects.toThrow(ZodError);
+
+            expect(usersRepository.findByEmail).not.toHaveBeenCalled();
             expect(usersRepository.createUser).not.toHaveBeenCalled();
         });
     });
