@@ -15,6 +15,8 @@ export default [
             "no-unused-vars": "off",
             "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
             "no-useless-constructor": "off",
+            "new-cap": "off",
+            "func-style": "off"
         }
     },
 ];
