@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { EmailAlreadyRegisteredError } from "../errors/email-already-registered.error";
 import { UsersRepository } from "../repository/users.repository";
 
 const createUserSchema = z.object({
@@ -18,6 +19,12 @@ export class CreateUserUseCase {
 
     async execute(createUserInput: CreateUserInput): Promise<number> {
         const { name, profile, email } = createUserSchema.parse(createUserInput);
+
+        const user = await this.usersRepository.findByEmail(email);
+
+        if (user) {
+            throw new EmailAlreadyRegisteredError(email);
+        }
 
         const { id } = await this.usersRepository.createUser({ name, profile, email });
 
