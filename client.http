@@ -22,3 +22,7 @@ Content-Type: application/json
 {
     "email": "jose.claudio@email.com"
 }
+
+### Sign In
+
+GET {{api-url}}/magic-link/sign-in?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impvc2UuY2xhdWRpb0BlbWFpbC5jb20iLCJpYXQiOjE3MTUyMDgxNjQsImV4cCI6MTcxNTIwOTk2NH0.jSFoQJKR1EomuReXOuCHM_PHr6wX1HZOFiqxKrJOxnE HTTP/1.1

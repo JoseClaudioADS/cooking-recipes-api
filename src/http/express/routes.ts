@@ -20,6 +20,7 @@ userRouter.post("/", usersController.create.bind(usersController));
 const magicLinkRouter = Router();
 
 magicLinkRouter.post("/", magicLinkController.create.bind(magicLinkController));
+magicLinkRouter.get("/sign-in", magicLinkController.signIn.bind(magicLinkController));
 
 // App routes
 const appRouter = Router();

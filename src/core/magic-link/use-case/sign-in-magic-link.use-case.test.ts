@@ -16,7 +16,8 @@ describe("SignInMagicLinkUseCase", () => {
 
     beforeAll(() => {
         magicLinkRepository = {
-            findByToken: vi.fn()
+            findByToken: vi.fn(),
+            deleteMagicLink: vi.fn()
         } as unknown as MagicLinkRepository;
 
         useCase = new SignInMagicLinkUseCase(magicLinkRepository);
@@ -51,6 +52,7 @@ describe("SignInMagicLinkUseCase", () => {
             expect(result).toStrictEqual({
                 token: expect.any(String)
             });
+            expect(magicLinkRepository.deleteMagicLink).toHaveBeenCalledWith(input.token);
         });
 
         it("should not sign in via magic link when the token is invalid", async () => {

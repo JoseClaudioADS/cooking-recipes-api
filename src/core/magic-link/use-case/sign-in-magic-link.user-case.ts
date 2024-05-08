@@ -44,6 +44,8 @@ export class SignInMagicLinkUseCase {
 
         const newToken = SignInMagicLinkUseCase.generateToken(magicLinkDb.user);
 
+        await this.magicLinkRepository.deleteMagicLink(token);
+
         return {
             token: newToken
         };
