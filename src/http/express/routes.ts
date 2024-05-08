@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { UsersRepository } from "../../core/users/repository/users.repository";
+import prisma from "../../infra/prisma-db";
+import { PrismaUsersRepository } from "../../infra/repository/prisma-users.repository";
 import { UsersController } from "./controllers/users.controller";
 
-const usersRepository: UsersRepository = {
-    createUser: {},
-    findByEmail: {}
-} as UsersRepository;
+const usersRepository = new PrismaUsersRepository(prisma);
 
 const usersController = new UsersController(usersRepository);
 

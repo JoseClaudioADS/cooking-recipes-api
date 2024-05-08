@@ -28,7 +28,7 @@ describe("CreateUserUseCase", () => {
 
         const input: CreateUserInput = {
             name: faker.person.fullName(),
-            profile: faker.person.bio(),
+            bio: faker.person.bio(),
             email: faker.internet.email()
         };
 
@@ -47,7 +47,7 @@ describe("CreateUserUseCase", () => {
                 id: faker.number.int(),
                 email: input.email,
                 name: faker.person.fullName(),
-                profile: faker.person.bio()
+                bio: faker.person.bio()
             });
 
             await expect(useCase.execute(input)).rejects.toThrow(new EmailAlreadyRegisteredError(input.email));

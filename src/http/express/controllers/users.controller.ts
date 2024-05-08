@@ -14,8 +14,8 @@ export class UsersController {
     }
 
     async create(req: Request, res: Response): Promise<void> {
-        const result = await this.createUserUseCase.execute(req.body);
+        await this.createUserUseCase.execute(req.body);
 
-        res.send(result);
+        res.sendStatus(201);
     }
 }

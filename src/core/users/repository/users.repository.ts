@@ -3,5 +3,5 @@ import { CreateUserRepositoryInput, CreateUserRepositoryOutput } from "./types/c
 
 export interface UsersRepository {
     createUser(createUserRepositoryInput: CreateUserRepositoryInput): Promise<CreateUserRepositoryOutput>;
-    findByEmail(email: string): Promise<User>;
+    findByEmail(email: string): Promise<User | null>;
 }

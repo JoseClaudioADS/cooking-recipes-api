@@ -1,6 +1,6 @@
 export type CreateUserRepositoryInput = {
     name: string;
-    profile?: string;
+    bio?: string;
     email: string;
 }
 

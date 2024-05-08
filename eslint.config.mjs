@@ -5,12 +5,12 @@ import tseslint from "typescript-eslint";
 
 
 export default [
-    { languageOptions: { globals: globals.node }},
+    { languageOptions: { globals: globals.node } },
     pluginJs.configs.recommended,
     ...tseslint.configs.recommended,
     ...eslintConfigESLint,
-    { ignores: ["eslint.config.js", "node_modules"]},
-    { 
+    { ignores: ["eslint.config.js", "node_modules"] },
+    {
         rules: {
             "no-unused-vars": "off",
             "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
@@ -18,6 +18,5 @@ export default [
             "new-cap": "off",
             "func-style": "off"
         }
-    },
+    }
 ];
-  

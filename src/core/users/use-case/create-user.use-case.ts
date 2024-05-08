@@ -4,7 +4,7 @@ import { UsersRepository } from "../repository/users.repository";
 
 const createUserSchema = z.object({
     name: z.string().min(2),
-    profile: z.string().optional(),
+    bio: z.string().optional(),
     email: z.string().email()
 });
 
@@ -18,7 +18,7 @@ export class CreateUserUseCase {
     constructor(private readonly usersRepository: UsersRepository) {}
 
     async execute(createUserInput: CreateUserInput): Promise<number> {
-        const { name, profile, email } = createUserSchema.parse(createUserInput);
+        const { name, bio, email } = createUserSchema.parse(createUserInput);
 
         const user = await this.usersRepository.findByEmail(email);
 
@@ -26,7 +26,7 @@ export class CreateUserUseCase {
             throw new EmailAlreadyRegisteredError(email);
         }
 
-        const { id } = await this.usersRepository.createUser({ name, profile, email });
+        const { id } = await this.usersRepository.createUser({ name, bio, email });
 
         return id;
     }

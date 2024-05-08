@@ -9,12 +9,14 @@ const errorHandler = (err: Error, req: Request, res: Response, _: () => unknown)
         logger.debug(err.issues);
         res.status(400).send("Invalid input");
     } else if (err instanceof BusinessError) {
-        logger.debug(err);
-        res.status(400).send({
+        const errObject = {
             code: err.code,
             message: err.message,
             timestamp: new Date().toISOString()
-        });
+        };
+
+        res.status(400).send(errObject);
+        logger.debug(errObject);
     } else {
         logger.error(err);
         res.status(500).send({ error: err.message });
