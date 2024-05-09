@@ -20,7 +20,7 @@ const uploadService = new LocalUploadService();
 
 const usersController = new UsersController(usersRepository);
 const magicLinkController = new MagicLinkController(usersRepository, magicLinkRepository);
-const recipesController = new RecipesController(recipesRepository);
+const recipesController = new RecipesController(recipesRepository, uploadService);
 const photosController = new PhotosController(photosRepository, uploadService);
 
 // Users routes
@@ -38,6 +38,7 @@ magicLinkRouter.get("/sign-in", magicLinkController.signIn.bind(magicLinkControl
 const recipesRouter = Router();
 
 recipesRouter.post("/", authMiddleware, recipesController.create.bind(recipesController));
+recipesRouter.get("/", recipesController.search.bind(recipesController));
 
 // Photos routes
 const photosRouter = Router();

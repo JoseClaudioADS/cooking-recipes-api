@@ -8,6 +8,7 @@ import { Ingredient } from "./ingredient";
 export class Recipe {
 
     constructor(
+        public readonly id: number,
         public readonly title: string,
         public readonly description: string | null,
         public readonly preparationTime: number,

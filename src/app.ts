@@ -4,6 +4,7 @@ import express from "express";
 import "express-async-errors";
 import fileUpload from "express-fileupload";
 import morgan from "morgan";
+import { join } from "path";
 import errorHandler from "./http/express/error.handler";
 import appRouter from "./http/express/routes";
 import logger from "./utils/logger";
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(morgan("common"));
 app.use(cookieParser());
 app.use(fileUpload());
+app.use(express.static(join(__dirname, "..", "public")));
 
 app.use("/api", appRouter);
 

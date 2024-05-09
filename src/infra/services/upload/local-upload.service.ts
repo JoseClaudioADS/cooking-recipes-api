@@ -11,6 +11,11 @@ export class LocalUploadService implements UploadService {
     async upload(file: UploadFileInput): Promise<void> {
 
         await mkdir(env.UPLOAD_FILE_PATH, { recursive: true });
-        await writeFile(`${env.UPLOAD_FILE_PATH}/${file.filename}`, file.data);
+        await writeFile(`./public${env.UPLOAD_FILE_PATH}/${file.filename}`, file.data);
+    }
+
+    // eslint-disable-next-line class-methods-use-this -- Disabling because it's just for test purposes
+    getUrl(filename: string): string {
+        return `${env.API_URL}${env.UPLOAD_FILE_PATH}/${filename}`;
     }
 }
