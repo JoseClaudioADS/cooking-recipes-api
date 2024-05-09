@@ -21,8 +21,8 @@ const errorHandler = (err: Error, req: Request, res: Response, _: () => unknown)
     } else if (err instanceof UnauthorizedError) {
         res.status(401).send();
     } else {
-        logger.error(err);
-        res.status(500).send({ error: err.message });
+        logger.error(err.message, err);
+        res.sendStatus(500);
     }
 };
 

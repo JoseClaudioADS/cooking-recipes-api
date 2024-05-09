@@ -43,7 +43,7 @@ describe("CreateRecipeUseCase", () => {
 
         it("should create a recipe", async () => {
 
-            vi.spyOn(recipesRepository, "create").mockResolvedValueOnce();
+            vi.spyOn(recipesRepository, "create").mockResolvedValueOnce({ id: faker.number.int() });
 
             await useCase.execute(input);
 

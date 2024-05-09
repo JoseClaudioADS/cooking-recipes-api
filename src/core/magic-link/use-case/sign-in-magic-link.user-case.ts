@@ -53,7 +53,9 @@ export class SignInMagicLinkUseCase {
 
     private static generateToken(user: User): string {
 
-        return sign({ email: user.email }, env.JWT_SECRET_KEY, { expiresIn: env.JWT_EXPIRATION_TIME });
+        return sign({ id: user.id, email: user.email, name: user.name },
+            env.JWT_SECRET_KEY,
+            { expiresIn: env.JWT_EXPIRATION_TIME });
 
     }
 }

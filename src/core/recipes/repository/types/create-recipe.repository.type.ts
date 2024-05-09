@@ -9,3 +9,7 @@ export type CreateRecipeRepositoryInput = {
   photoId: number;
   userId: number;
 }
+
+export type CreateRecipeRepositoryOutput = {
+  id: number;
+}

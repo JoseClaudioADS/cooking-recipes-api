@@ -3,6 +3,7 @@ import { MagicLinkRepository } from "../../../core/magic-link/repository/magic-l
 import { CreateMagicLinkUseCase } from "../../../core/magic-link/use-case/create-magic-link.user-case";
 import { SignInMagicLinkInput, SignInMagicLinkUseCase } from "../../../core/magic-link/use-case/sign-in-magic-link.user-case";
 import { UsersRepository } from "../../../core/users/repository/users.repository";
+import constants from "../../../utils/constants";
 import env from "../../../utils/env";
 
 /**
@@ -27,7 +28,7 @@ export class MagicLinkController {
     async signIn(req: Request, res: Response): Promise<void> {
         const result = await this.signInMagicLinkUseCase.execute(req.query as SignInMagicLinkInput);
 
-        res.cookie("x-cooking-recipes-token", result.token, {
+        res.cookie(constants.TOKEN_COOKIE_NAME, result.token, {
             httpOnly: true,
             secure: env.NODE_ENV === "production",
             sameSite: true
