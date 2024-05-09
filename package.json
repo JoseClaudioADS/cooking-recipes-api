@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "prisma:migrate:dev": "prisma migrate dev",
     "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "test:e2e": "vitest run --dir ./tests/e2e --no-file-parallelism"
   },
   "keywords": [],
   "author": "Jose Claudio",
@@ -24,6 +25,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.11",
+    "axios": "^1.6.8",
     "eslint": "^9.2.0",
     "eslint-config-eslint": "^10.0.0",
     "eslint-config-prettier": "^9.1.0",
