@@ -1,10 +1,6 @@
 // src/types/express/index.d.ts
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-}
+import { AuthUser } from "../../core/shared/entity/auth-user";
 
 // to make the file a module and avoid the TypeScript error
 export { };
@@ -12,7 +8,7 @@ export { };
 declare global {
   namespace Express {
     export interface Request {
-      user?: User;
+      user?: AuthUser;
     }
   }
 }
