@@ -1,6 +1,10 @@
-import { CreatePhotoRepositoryInput, CreatePhotoRepositoryOutput } from "./types/create-photo.repository.type";
-
+import {
+  CreatePhotoRepositoryInput,
+  CreatePhotoRepositoryOutput,
+} from "./types/create-photo.repository.type";
 
 export interface PhotosRepository {
-  create(createPhotoInput: CreatePhotoRepositoryInput): Promise<CreatePhotoRepositoryOutput>;
+  create(
+    createPhotoInput: CreatePhotoRepositoryInput,
+  ): Promise<CreatePhotoRepositoryOutput>;
 }

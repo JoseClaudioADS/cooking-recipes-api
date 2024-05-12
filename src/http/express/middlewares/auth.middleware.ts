@@ -5,7 +5,6 @@ import constants from "../../../utils/constants";
 import env from "../../../utils/env";
 
 export const authMiddleware = (req: Request, _: Response, next: () => void) => {
-
   if (!req.cookies[constants.TOKEN_COOKIE_NAME]) {
     throw new UnauthorizedError();
   }
@@ -18,7 +17,7 @@ export const authMiddleware = (req: Request, _: Response, next: () => void) => {
     req.user = {
       id,
       email,
-      name
+      name,
     };
   } catch (error) {
     throw new UnauthorizedError();

@@ -19,8 +19,14 @@ const photosRepository = new PrismaPhotosRepository(prisma);
 const uploadService = new LocalUploadService();
 
 const usersController = new UsersController(usersRepository);
-const magicLinkController = new MagicLinkController(usersRepository, magicLinkRepository);
-const recipesController = new RecipesController(recipesRepository, uploadService);
+const magicLinkController = new MagicLinkController(
+  usersRepository,
+  magicLinkRepository,
+);
+const recipesController = new RecipesController(
+  recipesRepository,
+  uploadService,
+);
 const photosController = new PhotosController(photosRepository, uploadService);
 
 // Users routes
@@ -32,18 +38,29 @@ userRouter.post("/", usersController.create.bind(usersController));
 const magicLinkRouter = Router();
 
 magicLinkRouter.post("/", magicLinkController.create.bind(magicLinkController));
-magicLinkRouter.get("/sign-in", magicLinkController.signIn.bind(magicLinkController));
+magicLinkRouter.get(
+  "/sign-in",
+  magicLinkController.signIn.bind(magicLinkController),
+);
 
 // Recipes routes
 const recipesRouter = Router();
 
-recipesRouter.post("/", authMiddleware, recipesController.create.bind(recipesController));
+recipesRouter.post(
+  "/",
+  authMiddleware,
+  recipesController.create.bind(recipesController),
+);
 recipesRouter.get("/", recipesController.search.bind(recipesController));
 
 // Photos routes
 const photosRouter = Router();
 
-photosRouter.post("/", authMiddleware, photosController.create.bind(photosController));
+photosRouter.post(
+  "/",
+  authMiddleware,
+  photosController.create.bind(photosController),
+);
 
 // App routes
 const appRouter = Router();

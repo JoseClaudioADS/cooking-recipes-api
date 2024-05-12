@@ -8,13 +8,18 @@ import { UploadService } from "../../../core/shared/services/upload.service";
  *
  */
 export class RecipesController {
-
   private readonly createRecipeUseCase: CreateRecipeUseCase;
   private readonly searchRecipesUseCase: SearchRecipesUseCase;
 
-  constructor(readonly recipesRepository: RecipesRepository, readonly uploadService: UploadService) {
+  constructor(
+    readonly recipesRepository: RecipesRepository,
+    readonly uploadService: UploadService,
+  ) {
     this.createRecipeUseCase = new CreateRecipeUseCase(recipesRepository);
-    this.searchRecipesUseCase = new SearchRecipesUseCase(recipesRepository, uploadService);
+    this.searchRecipesUseCase = new SearchRecipesUseCase(
+      recipesRepository,
+      uploadService,
+    );
   }
 
   async create(req: Request, res: Response): Promise<void> {
@@ -22,14 +27,13 @@ export class RecipesController {
 
     await this.createRecipeUseCase.execute({
       ...req.body,
-      userId
+      userId,
     });
 
     res.sendStatus(201);
   }
 
   async search(req: Request, res: Response): Promise<void> {
-
     const result = await this.searchRecipesUseCase.execute(req.query);
 
     res.json(result);

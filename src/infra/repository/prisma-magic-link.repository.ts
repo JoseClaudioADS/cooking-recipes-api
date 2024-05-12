@@ -4,28 +4,26 @@ import { MagicLinkRepository } from "../../core/magic-link/repository/magic-link
 import { User } from "../../core/users/entity/user";
 import { parseUser } from "./parsers/prisma-user.parser";
 
-
 /**
  *
  */
 export class PrismaMagicLinkRepository implements MagicLinkRepository {
-
   constructor(private readonly prisma: PrismaClient) {}
 
   async createMagicLink(user: User, token: string): Promise<void> {
     await this.prisma.magicLink.create({
       data: {
         userId: user.id,
-        token
-      }
+        token,
+      },
     });
   }
 
   async deleteMagicLink(token: string): Promise<void> {
     await this.prisma.magicLink.delete({
       where: {
-        token
-      }
+        token,
+      },
     });
   }
 
@@ -33,12 +31,12 @@ export class PrismaMagicLinkRepository implements MagicLinkRepository {
     const magicLink = await this.prisma.magicLink.findFirst({
       where: {
         user: {
-          email
-        }
+          email,
+        },
       },
       include: {
-        user: true
-      }
+        user: true,
+      },
     });
 
     if (!magicLink) {
@@ -48,18 +46,18 @@ export class PrismaMagicLinkRepository implements MagicLinkRepository {
     return {
       token: magicLink.token,
       user: parseUser(magicLink.user),
-      createdAt: magicLink.createdAt
+      createdAt: magicLink.createdAt,
     };
   }
 
   async findByToken(token: string): Promise<MagicLink | null> {
     const magicLink = await this.prisma.magicLink.findFirst({
       where: {
-        token
+        token,
       },
       include: {
-        user: true
-      }
+        user: true,
+      },
     });
 
     if (!magicLink) {
@@ -69,7 +67,7 @@ export class PrismaMagicLinkRepository implements MagicLinkRepository {
     return {
       token: magicLink.token,
       user: parseUser(magicLink.user),
-      createdAt: magicLink.createdAt
+      createdAt: magicLink.createdAt,
     };
   }
 }

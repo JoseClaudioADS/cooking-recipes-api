@@ -5,5 +5,5 @@ export const parseUser = (user: PrismaUser): User => ({
   id: user.id,
   email: user.email,
   name: user.name,
-  bio: user.bio
+  bio: user.bio,
 });

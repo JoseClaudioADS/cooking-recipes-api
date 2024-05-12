@@ -5,7 +5,10 @@ import { UsersRepository } from "../repository/users.repository";
 const createUserSchema = z.object({
   name: z.string().min(2),
   bio: z.string().optional(),
-  email: z.string().email().transform(email => email.toLowerCase())
+  email: z
+    .string()
+    .email()
+    .transform((email) => email.toLowerCase()),
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
@@ -14,7 +17,6 @@ export type CreateUserInput = z.infer<typeof createUserSchema>;
  *
  */
 export class CreateUserUseCase {
-
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async execute(createUserInput: CreateUserInput): Promise<number> {

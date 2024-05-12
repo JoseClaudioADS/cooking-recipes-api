@@ -7,24 +7,30 @@ import { UsersRepository } from "../../users/repository/users.repository";
 import { MagicLinkRepository } from "../repository/magic-link.repository";
 
 const createMagicLinkSchema = z.object({
-  email: z.string().email().transform(email => email.toLowerCase())
+  email: z
+    .string()
+    .email()
+    .transform((email) => email.toLowerCase()),
 });
 
 export type CreateMagicLinkInput = z.infer<typeof createMagicLinkSchema>;
 
 export type CreateMagicLinkOutput = {
-    magicLink: string
-}
+  magicLink: string;
+};
 
 /**
  *
  */
 export class CreateMagicLinkUseCase {
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly magicLinkRepository: MagicLinkRepository,
+  ) {}
 
-  constructor(private readonly usersRepository: UsersRepository,
-        private readonly magicLinkRepository: MagicLinkRepository) {}
-
-  async execute(createMagicLinkInput: CreateMagicLinkInput): Promise<CreateMagicLinkOutput> {
+  async execute(
+    createMagicLinkInput: CreateMagicLinkInput,
+  ): Promise<CreateMagicLinkOutput> {
     const { email } = createMagicLinkSchema.parse(createMagicLinkInput);
 
     const user = await this.usersRepository.findByEmail(email);
@@ -46,17 +52,21 @@ export class CreateMagicLinkUseCase {
     // TODO: send magic link
 
     return {
-      magicLink
+      magicLink,
     };
   }
 
-  private static generateMagicLink(user: User): {magicLink: string, token: string} {
-
-    const jwt = sign({ email: user.email }, env.JWT_SECRET_KEY, { expiresIn: "30m" });
+  private static generateMagicLink(user: User): {
+    magicLink: string;
+    token: string;
+  } {
+    const jwt = sign({ email: user.email }, env.JWT_SECRET_KEY, {
+      expiresIn: "30m",
+    });
 
     return {
       magicLink: `${env.API_URL}/magic-link?token=${jwt}`,
-      token: jwt
+      token: jwt,
     };
   }
 }

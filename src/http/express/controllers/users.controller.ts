@@ -6,7 +6,6 @@ import { CreateUserUseCase } from "../../../core/users/use-case/create-user.use-
  *
  */
 export class UsersController {
-
   private readonly createUserUseCase: CreateUserUseCase;
 
   constructor(readonly usersRepository: UsersRepository) {

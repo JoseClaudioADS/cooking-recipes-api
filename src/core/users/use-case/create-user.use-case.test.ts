@@ -5,16 +5,14 @@ import { EmailAlreadyRegisteredError } from "../errors/email-already-registered.
 import { UsersRepository } from "../repository/users.repository";
 import { CreateUserInput, CreateUserUseCase } from "./create-user.use-case";
 
-
 describe("CreateUserUseCase", () => {
-
   let useCase: CreateUserUseCase;
   let usersRepository: UsersRepository;
 
   beforeAll(() => {
     usersRepository = {
       createUser: vi.fn(),
-      findByEmail: vi.fn()
+      findByEmail: vi.fn(),
     } as unknown as UsersRepository;
 
     useCase = new CreateUserUseCase(usersRepository);
@@ -25,15 +23,13 @@ describe("CreateUserUseCase", () => {
   });
 
   describe("given a valid input", () => {
-
     const input: CreateUserInput = {
       name: faker.person.fullName(),
       bio: faker.person.bio(),
-      email: faker.internet.email().toLocaleLowerCase()
+      email: faker.internet.email().toLocaleLowerCase(),
     };
 
     it("should create a user", async () => {
-
       vi.spyOn(usersRepository, "createUser").mockResolvedValueOnce({ id: 1 });
 
       const result = await useCase.execute(input);
@@ -42,25 +38,25 @@ describe("CreateUserUseCase", () => {
     });
 
     it("should not create a user with a already registered email", async () => {
-
       vi.spyOn(usersRepository, "findByEmail").mockResolvedValueOnce({
         id: faker.number.int(),
         email: input.email,
         name: faker.person.fullName(),
-        bio: faker.person.bio()
+        bio: faker.person.bio(),
       });
 
-      await expect(useCase.execute(input)).rejects.toThrow(new EmailAlreadyRegisteredError(input.email));
+      await expect(useCase.execute(input)).rejects.toThrow(
+        new EmailAlreadyRegisteredError(input.email),
+      );
 
       expect(usersRepository.createUser).not.toHaveBeenCalled();
     });
   });
 
   describe("given an invalid input", () => {
-
     const input: CreateUserInput = {
       name: "a",
-      email: "invalid-email"
+      email: "invalid-email",
     };
 
     it("should not create a user", async () => {

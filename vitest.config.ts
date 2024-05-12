@@ -4,7 +4,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   root: ".",
   esbuild: {
-    tsconfigRaw: "{}"
+    tsconfigRaw: "{}",
   },
   test: {
     clearMocks: true,
@@ -12,10 +12,11 @@ export default defineConfig({
     setupFiles: ["dotenv/config"],
     env: {
       NODE_ENV: "test",
-      DATABASE_URL: "postgresql://cooking-recipes-user:cooking-recipes-password@localhost:5432/cooking-recipes-test?schema=public"
-    }
+      DATABASE_URL:
+        "postgresql://cooking-recipes-user:cooking-recipes-password@localhost:5432/cooking-recipes-test?schema=public",
+    },
   },
   resolve: {
-    alias: [{ find: "~", replacement: resolve(__dirname, "src") }]
-  }
+    alias: [{ find: "~", replacement: resolve(__dirname, "src") }],
+  },
 });

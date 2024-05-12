@@ -2,7 +2,10 @@
  *
  */
 export class BusinessError extends Error {
-  constructor(message: string, public readonly code: string) {
+  constructor(
+    message: string,
+    public readonly code: string,
+  ) {
     super(message);
 
     // https://edg.foo/blog/better-errors-ts#a-more-helpful-error-class

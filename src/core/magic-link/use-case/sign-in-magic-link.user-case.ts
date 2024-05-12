@@ -7,25 +7,24 @@ import { User } from "../../users/entity/user";
 import { MagicLinkRepository } from "../repository/magic-link.repository";
 
 const signInMagicLinkSchema = z.object({
-  token: z.string().min(1)
+  token: z.string().min(1),
 });
 
 export type SignInMagicLinkInput = z.infer<typeof signInMagicLinkSchema>;
 
 export type SignInMagicLinkOutput = {
-    token: string
-}
+  token: string;
+};
 
 /**
  *
  */
 export class SignInMagicLinkUseCase {
+  constructor(private readonly magicLinkRepository: MagicLinkRepository) {}
 
-  constructor(
-      private readonly magicLinkRepository: MagicLinkRepository
-  ) {}
-
-  async execute(signInMagicLinkInput: SignInMagicLinkInput): Promise<SignInMagicLinkOutput> {
+  async execute(
+    signInMagicLinkInput: SignInMagicLinkInput,
+  ): Promise<SignInMagicLinkOutput> {
     const { token } = signInMagicLinkSchema.parse(signInMagicLinkInput);
 
     try {
@@ -47,15 +46,15 @@ export class SignInMagicLinkUseCase {
     await this.magicLinkRepository.deleteMagicLink(token);
 
     return {
-      token: newToken
+      token: newToken,
     };
   }
 
   private static generateToken(user: User): string {
-
-    return sign({ id: user.id, email: user.email, name: user.name },
+    return sign(
+      { id: user.id, email: user.email, name: user.name },
       env.JWT_SECRET_KEY,
-      { expiresIn: env.JWT_EXPIRATION_TIME });
-
+      { expiresIn: env.JWT_EXPIRATION_TIME },
+    );
   }
 }

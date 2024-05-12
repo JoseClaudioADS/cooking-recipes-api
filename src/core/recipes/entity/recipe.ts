@@ -17,6 +17,6 @@ export class Recipe {
     public readonly user: User,
     public readonly category: Category,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date
+    public readonly updatedAt: Date,
   ) {}
 }

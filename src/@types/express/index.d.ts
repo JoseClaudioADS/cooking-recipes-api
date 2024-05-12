@@ -3,7 +3,7 @@
 import { AuthUser } from "../../core/shared/entity/auth-user";
 
 // to make the file a module and avoid the TypeScript error
-export { };
+export {};
 
 declare global {
   namespace Express {

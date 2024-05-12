@@ -2,11 +2,11 @@ import { PrismaClient } from "@prisma/client";
 import { RecipesRepository } from "../../core/recipes/repository/recipes.repository";
 import {
   CreateRecipeRepositoryInput,
-  CreateRecipeRepositoryOutput
+  CreateRecipeRepositoryOutput,
 } from "../../core/recipes/repository/types/create-recipe.repository.type";
 import {
   SearchRecipesRepositoryInput,
-  SearchRecipesRepositoryOutput
+  SearchRecipesRepositoryOutput,
 } from "../../core/recipes/repository/types/search-recipes.repository.type";
 import { parseUser } from "./parsers/prisma-user.parser";
 
@@ -14,10 +14,10 @@ import { parseUser } from "./parsers/prisma-user.parser";
  *
  */
 export class PrismaRecipesRepository implements RecipesRepository {
-  constructor(private readonly prisma: PrismaClient) { }
+  constructor(private readonly prisma: PrismaClient) {}
 
   async create(
-    createRecipeInput: CreateRecipeRepositoryInput
+    createRecipeInput: CreateRecipeRepositoryInput,
   ): Promise<CreateRecipeRepositoryOutput> {
     const {
       title,
@@ -26,7 +26,7 @@ export class PrismaRecipesRepository implements RecipesRepository {
       ingredients,
       photoId,
       userId,
-      categoryId
+      categoryId,
     } = createRecipeInput;
 
     const recipe = await this.prisma.recipe.create({
@@ -35,42 +35,42 @@ export class PrismaRecipesRepository implements RecipesRepository {
         description,
         preparationTime,
         ingredients: {
-          create: ingredients
+          create: ingredients,
         },
         photo: {
           connect: {
-            id: photoId
-          }
+            id: photoId,
+          },
         },
         user: {
           connect: {
-            id: userId
-          }
+            id: userId,
+          },
         },
         category: {
           connect: {
-            id: categoryId
-          }
-        }
-      }
+            id: categoryId,
+          },
+        },
+      },
     });
 
     return {
-      id: recipe.id
+      id: recipe.id,
     };
   }
 
   async search(
-    searchRecipeInput: SearchRecipesRepositoryInput
+    searchRecipeInput: SearchRecipesRepositoryInput,
   ): Promise<SearchRecipesRepositoryOutput> {
     const { title } = searchRecipeInput;
 
     const total = await this.prisma.recipe.count({
       where: {
         title: {
-          contains: title
-        }
-      }
+          contains: title,
+        },
+      },
     });
 
     const recipes = await this.prisma.recipe.findMany({
@@ -78,39 +78,39 @@ export class PrismaRecipesRepository implements RecipesRepository {
         photo: true,
         ingredients: true,
         user: true,
-        category: true
+        category: true,
       },
       where: {
         title: {
-          contains: title
-        }
-      }
+          contains: title,
+        },
+      },
     });
 
     return {
       total,
-      items: recipes.map(recipe => ({
+      items: recipes.map((recipe) => ({
         id: recipe.id,
         title: recipe.title,
         description: recipe.description,
         preparationTime: recipe.preparationTime,
-        ingredients: recipe.ingredients.map(ingredient => ({
+        ingredients: recipe.ingredients.map((ingredient) => ({
           id: ingredient.id,
           name: ingredient.name,
-          quantity: ingredient.quantity
+          quantity: ingredient.quantity,
         })),
         photo: {
           id: recipe.photo?.id as number,
-          filename: recipe.photo?.filename as string
+          filename: recipe.photo?.filename as string,
         },
         user: parseUser(recipe.user),
         category: {
           id: recipe.category?.id as number,
-          name: recipe.category?.name as string
+          name: recipe.category?.name as string,
         },
         createdAt: recipe.createdAt,
-        updatedAt: recipe.updatedAt
-      }))
+        updatedAt: recipe.updatedAt,
+      })),
     };
   }
 }

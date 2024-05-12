@@ -1,4 +1,4 @@
 export type UploadFileInput = {
-    filename: string,
-    data: Buffer
-}
+  filename: string;
+  data: Buffer;
+};

@@ -7,37 +7,43 @@ import { PhotosRepository } from "../repository/photos.repository";
 
 const createPhotoSchema = z.object({
   filename: z.string().min(2),
-  data: z.instanceof(Buffer)
+  data: z.instanceof(Buffer),
 });
 
 export type CreatePhotoInput = z.infer<typeof createPhotoSchema>;
 
 export type CreatePhotoOutput = {
-    id: number
-}
+  id: number;
+};
 
 /**
  *
  */
 export class CreatePhotoUseCase {
+  constructor(
+    private readonly photosRepository: PhotosRepository,
+    private readonly uploadService: UploadService,
+  ) {}
 
-  constructor(private readonly photosRepository: PhotosRepository,
-        private readonly uploadService: UploadService) {}
-
-  async execute(createPhotoInput: CreatePhotoInput, user: AuthUser): Promise<CreatePhotoOutput> {
+  async execute(
+    createPhotoInput: CreatePhotoInput,
+    user: AuthUser,
+  ): Promise<CreatePhotoOutput> {
     const { filename, data } = createPhotoSchema.parse(createPhotoInput);
 
     const newFilename = `${randomUUID().toString()}.${filename.split(".").pop()}`;
 
-    logger.info(`User ${JSON.stringify(user)} created a new photo. Filename: ${newFilename}`);
+    logger.info(
+      `User ${JSON.stringify(user)} created a new photo. Filename: ${newFilename}`,
+    );
 
     await this.uploadService.upload({
       filename: newFilename,
-      data
+      data,
     });
 
     return this.photosRepository.create({
-      filename: newFilename
+      filename: newFilename,
     });
   }
 }
