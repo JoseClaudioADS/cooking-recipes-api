@@ -6,9 +6,9 @@
     "start": "ts-node src/app.ts",
     "start:dev": "nodemon src/app.ts",
     "build": "tsc -p .",
+    "db:migrate": "ts-node src/infra/db/drizzle-db-migrate.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prisma:migrate:dev": "prisma migrate dev",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:e2e": "vitest run --dir ./tests/e2e --no-file-parallelism"
@@ -26,7 +26,9 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.11",
+    "@types/pg": "^8.11.6",
     "axios": "^1.6.8",
+    "drizzle-kit": "^0.21.1",
     "eslint": "^9.2.0",
     "eslint-config-eslint": "^10.0.0",
     "eslint-config-prettier": "^9.1.0",
@@ -34,26 +36,23 @@
     "globals": "^15.1.0",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
-    "prisma": "^5.13.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0",
     "vitest": "^1.6.0"
   },
   "dependencies": {
-    "@prisma/client": "5.13.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.10",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "express-fileupload": "^1.5.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "pg": "^8.11.5",
     "winston": "^3.13.0",
     "zod": "^3.23.7"
-  },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
   }
 }

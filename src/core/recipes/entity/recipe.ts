@@ -11,6 +11,7 @@ export class Recipe {
     public readonly id: number,
     public readonly title: string,
     public readonly description: string | null,
+    public readonly steps: string,
     public readonly preparationTime: number,
     public readonly ingredients: Ingredient[],
     public readonly photo: Photo,

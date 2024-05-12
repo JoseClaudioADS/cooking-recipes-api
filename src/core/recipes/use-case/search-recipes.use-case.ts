@@ -14,12 +14,8 @@ export type SearchRecipesOutput = {
     id: number;
     title: string;
     description: string | null;
+    steps: string;
     preparationTime: number;
-    ingredients: {
-      id: number;
-      name: string;
-      quantity: string;
-    }[];
     photoUrl: string;
     user: {
       id: number;
@@ -50,12 +46,8 @@ export class SearchRecipesUseCase {
       id: recipe.id,
       title: recipe.title,
       description: recipe.description,
+      steps: recipe.steps,
       preparationTime: recipe.preparationTime,
-      ingredients: recipe.ingredients.map((ingredient) => ({
-        id: ingredient.id,
-        name: ingredient.name,
-        quantity: ingredient.quantity,
-      })),
       photoUrl: this.uploadService.getUrl(recipe.photo.filename),
       user: {
         id: recipe.user.id,

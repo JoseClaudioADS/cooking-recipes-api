@@ -4,6 +4,7 @@ import { RecipesRepository } from "../repository/recipes.repository";
 const createRecipeSchema = z.object({
   title: z.string().min(2),
   description: z.string().optional(),
+  steps: z.string().min(1),
   preparationTime: z.number().min(1),
   ingredients: z.array(
     z.object({
@@ -28,6 +29,7 @@ export class CreateRecipeUseCase {
     const {
       title,
       description,
+      steps,
       photoId,
       preparationTime,
       ingredients,
@@ -38,6 +40,7 @@ export class CreateRecipeUseCase {
     await this.recipesRepository.create({
       title,
       description,
+      steps,
       photoId,
       preparationTime,
       ingredients,

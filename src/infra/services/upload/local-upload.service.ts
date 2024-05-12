@@ -9,7 +9,7 @@ import env from "../../../utils/env";
 export class LocalUploadService implements UploadService {
   // eslint-disable-next-line class-methods-use-this -- Disabling because it's just for test purposes
   async upload(file: UploadFileInput): Promise<void> {
-    await mkdir(env.UPLOAD_FILE_PATH, { recursive: true });
+    await mkdir(`./public${env.UPLOAD_FILE_PATH}`, { recursive: true });
     await writeFile(
       `./public${env.UPLOAD_FILE_PATH}/${file.filename}`,
       file.data,

@@ -1,5 +1,5 @@
 @api-url = http://localhost:3000/api
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb3NlLmNsYXVkaW9AZW1haWwuY29tIiwibmFtZSI6Ikpvc2UgQ2xhdWRpbyIsImlhdCI6MTcxNTI1NjQyNiwiZXhwIjoxNzE1NTE1NjI2fQ.JdgPF9bt9OMVXrYzELKiyCu6nf_yLjz3P5xRupyfml0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb3NlLmNsYXVkaW9AZW1haWwuY29tIiwibmFtZSI6Ikpvc2UgQ2xhdWRpbyIsImlhdCI6MTcxNTUyMDcxMiwiZXhwIjoxNzE1Nzc5OTEyfQ.oW9wy5q-TM5X8hBR5zmBNliVMav3r8yRiIDFQhfgwsk
 
 ### Users
 
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 ### Sign In
 
-GET {{api-url}}/magic-link/sign-in?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impvc2UuY2xhdWRpb0BlbWFpbC5jb20iLCJpYXQiOjE3MTUyNTY0MDgsImV4cCI6MTcxNTI1ODIwOH0.-IzAGOkUHL5sPkuAAXLdzSyBoA0uGYF9oM8Mk_ww0qY HTTP/1.1
+GET {{api-url}}/magic-link/sign-in?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impvc2UuY2xhdWRpb0BlbWFpbC5jb20iLCJpYXQiOjE3MTU1MjA2ODYsImV4cCI6MTcxNTUyMjQ4Nn0.MoNKHTb5ZtOdYFf_X8-aYiFFcc29s84ONXSDMNURmgg HTTP/1.1
 
 ### Recipes
 
@@ -39,6 +39,7 @@ Cookie: x-cooking-recipes-token={{token}}
 {
     "title": "Title test",
     "description": "Description test",
+    "steps": "Steps test",
     "preparationTime": 30,
     "ingredients": [
         {
@@ -46,5 +47,6 @@ Cookie: x-cooking-recipes-token={{token}}
             "quantity": "400g"
         }
     ],
-    "photoId": 1
+    "photoId": 1,
+    "categoryId": 1
 }

@@ -1,9 +1,10 @@
 import { Router } from "express";
-import prisma from "../../infra/prisma-db";
-import { PrismaMagicLinkRepository } from "../../infra/repository/prisma-magic-link.repository";
-import { PrismaPhotosRepository } from "../../infra/repository/prisma-photos.repository";
-import { PrismaRecipesRepository } from "../../infra/repository/prisma-recipes.repository";
-import { PrismaUsersRepository } from "../../infra/repository/prisma-users.repository";
+
+import db from "../../infra/db/drizzle-db";
+import { DrizzleMagicLinkRepository } from "../../infra/repository/drizzle-magic-link.repository";
+import { DrizzlePhotosRepository } from "../../infra/repository/drizzle-photos.repository";
+import { DrizzleRecipesRepository } from "../../infra/repository/drizzle-recipes.repository";
+import { DrizzleUsersRepository } from "../../infra/repository/drizzle-users.repository";
 import { LocalUploadService } from "../../infra/services/upload/local-upload.service";
 import { MagicLinkController } from "./controllers/magic-link.controller";
 import { PhotosController } from "./controllers/photos.controller";
@@ -11,10 +12,10 @@ import { RecipesController } from "./controllers/recipes.controller";
 import { UsersController } from "./controllers/users.controller";
 import { authMiddleware } from "./middlewares/auth.middleware";
 
-const usersRepository = new PrismaUsersRepository(prisma);
-const magicLinkRepository = new PrismaMagicLinkRepository(prisma);
-const recipesRepository = new PrismaRecipesRepository(prisma);
-const photosRepository = new PrismaPhotosRepository(prisma);
+const usersRepository = new DrizzleUsersRepository(db);
+const magicLinkRepository = new DrizzleMagicLinkRepository(db);
+const recipesRepository = new DrizzleRecipesRepository(db);
+const photosRepository = new DrizzlePhotosRepository(db);
 
 const uploadService = new LocalUploadService();
 

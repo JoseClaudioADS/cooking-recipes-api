@@ -28,6 +28,7 @@ describe("CreateRecipeUseCase", () => {
     const input: CreateRecipeInput = {
       title: faker.lorem.sentence(),
       description: faker.lorem.paragraph(),
+      steps: faker.lorem.paragraph(),
       photoId: faker.number.int(),
       preparationTime: faker.number.int(),
       ingredients: [
@@ -53,6 +54,7 @@ describe("CreateRecipeUseCase", () => {
 
       expect(recipesRepository.create).toHaveBeenCalledWith({
         ingredients: input.ingredients,
+        steps: input.steps,
         preparationTime: input.preparationTime,
         photoId: input.photoId,
         title: input.title,
