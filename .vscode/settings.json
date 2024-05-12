@@ -11,5 +11,8 @@
     "eslint.validate": [
         "javascript",
         "typescript",
-    ]
+    ],
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    }
 }   
