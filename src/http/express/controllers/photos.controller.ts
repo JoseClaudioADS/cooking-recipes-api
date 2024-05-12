@@ -10,22 +10,22 @@ import { UploadService } from "../../../core/shared/services/upload.service";
  */
 export class PhotosController {
 
-    private readonly createPhotoUseCase: CreatePhotoUseCase;
+  private readonly createPhotoUseCase: CreatePhotoUseCase;
 
-    constructor(readonly photosRepiository: PhotosRepository, readonly uploadService: UploadService) {
-        this.createPhotoUseCase = new CreatePhotoUseCase(photosRepiository, uploadService);
-    }
+  constructor(readonly photosRepiository: PhotosRepository, readonly uploadService: UploadService) {
+    this.createPhotoUseCase = new CreatePhotoUseCase(photosRepiository, uploadService);
+  }
 
-    async create(req: Request, res: Response): Promise<void> {
-        const user = req.user;
+  async create(req: Request, res: Response): Promise<void> {
+    const user = req.user;
 
-        const file = req.files?.xzc as UploadedFile;
+    const file = req.files?.xzc as UploadedFile;
 
-        await this.createPhotoUseCase.execute({
-            filename: file.name,
-            data: file.data
-        }, user as AuthUser);
+    await this.createPhotoUseCase.execute({
+      filename: file.name,
+      data: file.data
+    }, user as AuthUser);
 
-        res.sendStatus(201);
-    }
+    res.sendStatus(201);
+  }
 }

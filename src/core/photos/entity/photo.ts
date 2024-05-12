@@ -3,8 +3,8 @@
  */
 export class Photo {
 
-    constructor(
+  constructor(
         public readonly id: number,
         public readonly filename: string
-    ) {}
+  ) {}
 }

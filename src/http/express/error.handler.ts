@@ -6,24 +6,24 @@ import logger from "../../utils/logger";
 
 const errorHandler = (err: Error, req: Request, res: Response, _: () => unknown) => {
 
-    if (err instanceof ZodError) {
-        logger.debug(err.issues);
-        res.status(400).send("Invalid input");
-    } else if (err instanceof BusinessError) {
-        const errObject = {
-            code: err.code,
-            message: err.message,
-            timestamp: new Date().toISOString()
-        };
+  if (err instanceof ZodError) {
+    logger.debug(err.issues);
+    res.status(400).send("Invalid input");
+  } else if (err instanceof BusinessError) {
+    const errObject = {
+      code: err.code,
+      message: err.message,
+      timestamp: new Date().toISOString()
+    };
 
-        res.status(400).send(errObject);
-        logger.debug(errObject);
-    } else if (err instanceof UnauthorizedError) {
-        res.status(401).send();
-    } else {
-        logger.error(err.message, err);
-        res.sendStatus(500);
-    }
+    res.status(400).send(errObject);
+    logger.debug(errObject);
+  } else if (err instanceof UnauthorizedError) {
+    res.status(401).send();
+  } else {
+    logger.error(err.message, err);
+    res.sendStatus(500);
+  }
 };
 
 export default errorHandler;

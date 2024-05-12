@@ -8,63 +8,65 @@ import { CreateRecipeInput, CreateRecipeUseCase } from "./create-recipe.use-case
 
 describe("CreateRecipeUseCase", () => {
 
-    let useCase: CreateRecipeUseCase;
-    let recipesRepository: RecipesRepository;
+  let useCase: CreateRecipeUseCase;
+  let recipesRepository: RecipesRepository;
 
-    beforeAll(() => {
-        recipesRepository = {
-            create: vi.fn()
-        } as unknown as RecipesRepository;
+  beforeAll(() => {
+    recipesRepository = {
+      create: vi.fn()
+    } as unknown as RecipesRepository;
 
-        useCase = new CreateRecipeUseCase(recipesRepository);
+    useCase = new CreateRecipeUseCase(recipesRepository);
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("given a valid input", () => {
+
+    const input: CreateRecipeInput = {
+
+      title: faker.lorem.sentence(),
+      description: faker.lorem.paragraph(),
+      photoId: faker.number.int(),
+      preparationTime: faker.number.int(),
+      ingredients: [{
+        name: faker.lorem.word(),
+        quantity: faker.lorem.word()
+      }, {
+        name: faker.lorem.word(),
+        quantity: faker.lorem.word()
+      }],
+      userId: faker.number.int(),
+      categoryId: faker.number.int()
+    };
+
+    it("should create a recipe", async () => {
+
+      vi.spyOn(recipesRepository, "create").mockResolvedValueOnce({ id: faker.number.int() });
+
+      await useCase.execute(input);
+
+      expect(recipesRepository.create).toHaveBeenCalledWith({
+        ingredients: input.ingredients,
+        preparationTime: input.preparationTime,
+        photoId: input.photoId,
+        title: input.title,
+        userId: input.userId,
+        categoryId: input.categoryId,
+        description: input.description
+      } as CreateRecipeRepositoryInput);
     });
+  });
 
-    beforeEach(() => {
-        vi.clearAllMocks();
+  describe("given an invalid input", () => {
+
+
+    it("should not create a recipe", async () => {
+      await expect(useCase.execute({} as CreateRecipeInput)).rejects.toThrow(ZodError);
+
+      expect(recipesRepository.create).not.toHaveBeenCalled();
     });
-
-    describe("given a valid input", () => {
-
-        const input: CreateRecipeInput = {
-
-            title: faker.lorem.sentence(),
-            description: faker.lorem.paragraph(),
-            photoId: faker.number.int(),
-            preparationTime: faker.number.int(),
-            ingredients: [{
-                name: faker.lorem.word(),
-                quantity: faker.lorem.word()
-            }, {
-                name: faker.lorem.word(),
-                quantity: faker.lorem.word()
-            }],
-            userId: faker.number.int()
-        };
-
-        it("should create a recipe", async () => {
-
-            vi.spyOn(recipesRepository, "create").mockResolvedValueOnce({ id: faker.number.int() });
-
-            await useCase.execute(input);
-
-            expect(recipesRepository.create).toHaveBeenCalledWith({
-                ingredients: input.ingredients,
-                preparationTime: input.preparationTime,
-                photoId: input.photoId,
-                title: input.title,
-                userId: input.userId,
-                description: input.description
-            } as CreateRecipeRepositoryInput);
-        });
-    });
-
-    describe("given an invalid input", () => {
-
-
-        it("should not create a recipe", async () => {
-            await expect(useCase.execute({} as CreateRecipeInput)).rejects.toThrow(ZodError);
-
-            expect(recipesRepository.create).not.toHaveBeenCalled();
-        });
-    });
+  });
 });

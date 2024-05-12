@@ -25,5 +25,5 @@ app.use("/api", appRouter);
 app.use(errorHandler);
 
 app.listen(3000, () => {
-    logger.info("Server running on port 3000");
+  logger.info("Server running on port 3000");
 });

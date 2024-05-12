@@ -7,15 +7,15 @@ import { CreateUserUseCase } from "../../../core/users/use-case/create-user.use-
  */
 export class UsersController {
 
-    private readonly createUserUseCase: CreateUserUseCase;
+  private readonly createUserUseCase: CreateUserUseCase;
 
-    constructor(readonly usersRepository: UsersRepository) {
-        this.createUserUseCase = new CreateUserUseCase(usersRepository);
-    }
+  constructor(readonly usersRepository: UsersRepository) {
+    this.createUserUseCase = new CreateUserUseCase(usersRepository);
+  }
 
-    async create(req: Request, res: Response): Promise<void> {
-        await this.createUserUseCase.execute(req.body);
+  async create(req: Request, res: Response): Promise<void> {
+    await this.createUserUseCase.execute(req.body);
 
-        res.sendStatus(201);
-    }
+    res.sendStatus(201);
+  }
 }

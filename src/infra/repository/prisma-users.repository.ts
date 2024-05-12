@@ -8,39 +8,39 @@ import { UsersRepository } from "../../core/users/repository/users.repository";
  */
 export class PrismaUsersRepository implements UsersRepository {
 
-    constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaClient) {}
 
-    async createUser({ name, bio, email }: CreateUserRepositoryInput): Promise<CreateUserRepositoryOutput> {
+  async createUser({ name, bio, email }: CreateUserRepositoryInput): Promise<CreateUserRepositoryOutput> {
 
-        const user = await this.prisma.user.create({
-            data: {
-                name,
-                bio,
-                email
-            }
-        });
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        bio,
+        email
+      }
+    });
 
-        return { id: user.id };
+    return { id: user.id };
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email
+      }
+    });
+
+    if (!user) {
+      return null;
     }
 
-    async findByEmail(email: string): Promise<User | null> {
-
-        const user = await this.prisma.user.findUnique({
-            where: {
-                email
-            }
-        });
-
-        if (!user) {
-            return null;
-        }
-
-        return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            bio: user.bio
-        };
-    }
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      bio: user.bio
+    };
+  }
 
 }

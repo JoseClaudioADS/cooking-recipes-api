@@ -11,28 +11,28 @@ import env from "../../../utils/env";
  */
 export class MagicLinkController {
 
-    private readonly createMagicLinkUseCase: CreateMagicLinkUseCase;
-    private readonly signInMagicLinkUseCase: SignInMagicLinkUseCase;
+  private readonly createMagicLinkUseCase: CreateMagicLinkUseCase;
+  private readonly signInMagicLinkUseCase: SignInMagicLinkUseCase;
 
-    constructor(readonly usersRepository: UsersRepository, readonly magicLinkRepository: MagicLinkRepository) {
-        this.createMagicLinkUseCase = new CreateMagicLinkUseCase(usersRepository, magicLinkRepository);
-        this.signInMagicLinkUseCase = new SignInMagicLinkUseCase(magicLinkRepository);
-    }
+  constructor(readonly usersRepository: UsersRepository, readonly magicLinkRepository: MagicLinkRepository) {
+    this.createMagicLinkUseCase = new CreateMagicLinkUseCase(usersRepository, magicLinkRepository);
+    this.signInMagicLinkUseCase = new SignInMagicLinkUseCase(magicLinkRepository);
+  }
 
-    async create(req: Request, res: Response): Promise<void> {
-        await this.createMagicLinkUseCase.execute(req.body);
+  async create(req: Request, res: Response): Promise<void> {
+    await this.createMagicLinkUseCase.execute(req.body);
 
-        res.sendStatus(201);
-    }
+    res.sendStatus(201);
+  }
 
-    async signIn(req: Request, res: Response): Promise<void> {
-        const result = await this.signInMagicLinkUseCase.execute(req.query as SignInMagicLinkInput);
+  async signIn(req: Request, res: Response): Promise<void> {
+    const result = await this.signInMagicLinkUseCase.execute(req.query as SignInMagicLinkInput);
 
-        res.cookie(constants.TOKEN_COOKIE_NAME, result.token, {
-            httpOnly: true,
-            secure: env.NODE_ENV === "production",
-            sameSite: true
-        });
-        res.sendStatus(204);
-    }
+    res.cookie(constants.TOKEN_COOKIE_NAME, result.token, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: true
+    });
+    res.sendStatus(204);
+  }
 }

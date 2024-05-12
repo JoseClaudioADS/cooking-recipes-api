@@ -6,41 +6,41 @@ import { SearchRecipesInput, SearchRecipesUseCase } from "./search-recipes.use-c
 
 describe("SearchRecipesUseCase", () => {
 
-    let useCase: SearchRecipesUseCase;
-    let recipesRepository: RecipesRepository;
+  let useCase: SearchRecipesUseCase;
+  let recipesRepository: RecipesRepository;
 
-    beforeAll(() => {
-        recipesRepository = {
-            search: vi.fn()
-        } as unknown as RecipesRepository;
+  beforeAll(() => {
+    recipesRepository = {
+      search: vi.fn()
+    } as unknown as RecipesRepository;
 
-        useCase = new SearchRecipesUseCase(recipesRepository);
+    useCase = new SearchRecipesUseCase(recipesRepository);
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("given a valid input", () => {
+
+    const input: SearchRecipesInput = {
+
+    };
+
+    it("should search recipes", async () => {
+
+      vi.spyOn(recipesRepository, "search").mockResolvedValueOnce({ total: 0, items: [] });
+
+      await useCase.execute(input);
+
+      expect(recipesRepository.search).toHaveBeenCalledWith({
+
+      } as SearchRecipesRepositoryInput);
     });
+  });
 
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
+  describe("given an invalid input", () => {
 
-    describe("given a valid input", () => {
-
-        const input: SearchRecipesInput = {
-
-        };
-
-        it("should search recipes", async () => {
-
-            vi.spyOn(recipesRepository, "search").mockResolvedValueOnce({ total: 0, items: [] });
-
-            await useCase.execute(input);
-
-            expect(recipesRepository.search).toHaveBeenCalledWith({
-
-            } as SearchRecipesRepositoryInput);
-        });
-    });
-
-    describe("given an invalid input", () => {
-
-        it.skip("should not search recipes");
-    });
+    it.skip("should not search recipes");
+  });
 });

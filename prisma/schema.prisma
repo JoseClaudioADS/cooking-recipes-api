@@ -55,4 +55,12 @@ model Recipe {
   photo           Photo?       @relation(fields: [photoId], references: [id])
   photoId         Int?         @unique
   ingredients     Ingredient[]
+  category        Category     @relation(fields: [caterogyId], references: [id])
+  caterogyId      Int
+}
+
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String
+  recipes Recipe[]
 }

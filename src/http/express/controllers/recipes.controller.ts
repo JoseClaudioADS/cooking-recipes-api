@@ -9,29 +9,29 @@ import { UploadService } from "../../../core/shared/services/upload.service";
  */
 export class RecipesController {
 
-    private readonly createRecipeUseCase: CreateRecipeUseCase;
-    private readonly searchRecipesUseCase: SearchRecipesUseCase;
+  private readonly createRecipeUseCase: CreateRecipeUseCase;
+  private readonly searchRecipesUseCase: SearchRecipesUseCase;
 
-    constructor(readonly recipesRepository: RecipesRepository, readonly uploadService: UploadService) {
-        this.createRecipeUseCase = new CreateRecipeUseCase(recipesRepository);
-        this.searchRecipesUseCase = new SearchRecipesUseCase(recipesRepository, uploadService);
-    }
+  constructor(readonly recipesRepository: RecipesRepository, readonly uploadService: UploadService) {
+    this.createRecipeUseCase = new CreateRecipeUseCase(recipesRepository);
+    this.searchRecipesUseCase = new SearchRecipesUseCase(recipesRepository, uploadService);
+  }
 
-    async create(req: Request, res: Response): Promise<void> {
-        const userId = req.user?.id;
+  async create(req: Request, res: Response): Promise<void> {
+    const userId = req.user?.id;
 
-        await this.createRecipeUseCase.execute({
-            ...req.body,
-            userId
-        });
+    await this.createRecipeUseCase.execute({
+      ...req.body,
+      userId
+    });
 
-        res.sendStatus(201);
-    }
+    res.sendStatus(201);
+  }
 
-    async search(req: Request, res: Response): Promise<void> {
+  async search(req: Request, res: Response): Promise<void> {
 
-        const result = await this.searchRecipesUseCase.execute(req.query);
+    const result = await this.searchRecipesUseCase.execute(req.query);
 
-        res.json(result);
-    }
+    res.json(result);
+  }
 }

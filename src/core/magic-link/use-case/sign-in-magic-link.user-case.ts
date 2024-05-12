@@ -7,7 +7,7 @@ import { User } from "../../users/entity/user";
 import { MagicLinkRepository } from "../repository/magic-link.repository";
 
 const signInMagicLinkSchema = z.object({
-    token: z.string().min(1)
+  token: z.string().min(1)
 });
 
 export type SignInMagicLinkInput = z.infer<typeof signInMagicLinkSchema>;
@@ -21,41 +21,41 @@ export type SignInMagicLinkOutput = {
  */
 export class SignInMagicLinkUseCase {
 
-    constructor(
+  constructor(
       private readonly magicLinkRepository: MagicLinkRepository
-    ) {}
+  ) {}
 
-    async execute(signInMagicLinkInput: SignInMagicLinkInput): Promise<SignInMagicLinkOutput> {
-        const { token } = signInMagicLinkSchema.parse(signInMagicLinkInput);
+  async execute(signInMagicLinkInput: SignInMagicLinkInput): Promise<SignInMagicLinkOutput> {
+    const { token } = signInMagicLinkSchema.parse(signInMagicLinkInput);
 
-        try {
-            verify(token, env.JWT_SECRET_KEY);
-        } catch (error) {
-            logger.debug(`Magic link for token ${token} is invalid.`);
-            throw new UnauthorizedError();
-        }
-
-        const magicLinkDb = await this.magicLinkRepository.findByToken(token);
-
-        if (!magicLinkDb) {
-            logger.debug(`Magic link for token ${token} not found.`);
-            throw new UnauthorizedError();
-        }
-
-        const newToken = SignInMagicLinkUseCase.generateToken(magicLinkDb.user);
-
-        await this.magicLinkRepository.deleteMagicLink(token);
-
-        return {
-            token: newToken
-        };
+    try {
+      verify(token, env.JWT_SECRET_KEY);
+    } catch (error) {
+      logger.debug(`Magic link for token ${token} is invalid.`);
+      throw new UnauthorizedError();
     }
 
-    private static generateToken(user: User): string {
+    const magicLinkDb = await this.magicLinkRepository.findByToken(token);
 
-        return sign({ id: user.id, email: user.email, name: user.name },
-            env.JWT_SECRET_KEY,
-            { expiresIn: env.JWT_EXPIRATION_TIME });
-
+    if (!magicLinkDb) {
+      logger.debug(`Magic link for token ${token} not found.`);
+      throw new UnauthorizedError();
     }
+
+    const newToken = SignInMagicLinkUseCase.generateToken(magicLinkDb.user);
+
+    await this.magicLinkRepository.deleteMagicLink(token);
+
+    return {
+      token: newToken
+    };
+  }
+
+  private static generateToken(user: User): string {
+
+    return sign({ id: user.id, email: user.email, name: user.name },
+      env.JWT_SECRET_KEY,
+      { expiresIn: env.JWT_EXPIRATION_TIME });
+
+  }
 }

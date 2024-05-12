@@ -8,66 +8,66 @@ import { CreateUserInput, CreateUserUseCase } from "./create-user.use-case";
 
 describe("CreateUserUseCase", () => {
 
-    let useCase: CreateUserUseCase;
-    let usersRepository: UsersRepository;
+  let useCase: CreateUserUseCase;
+  let usersRepository: UsersRepository;
 
-    beforeAll(() => {
-        usersRepository = {
-            createUser: vi.fn(),
-            findByEmail: vi.fn()
-        } as unknown as UsersRepository;
+  beforeAll(() => {
+    usersRepository = {
+      createUser: vi.fn(),
+      findByEmail: vi.fn()
+    } as unknown as UsersRepository;
 
-        useCase = new CreateUserUseCase(usersRepository);
+    useCase = new CreateUserUseCase(usersRepository);
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("given a valid input", () => {
+
+    const input: CreateUserInput = {
+      name: faker.person.fullName(),
+      bio: faker.person.bio(),
+      email: faker.internet.email().toLocaleLowerCase()
+    };
+
+    it("should create a user", async () => {
+
+      vi.spyOn(usersRepository, "createUser").mockResolvedValueOnce({ id: 1 });
+
+      const result = await useCase.execute(input);
+
+      expect(result).toBe(1);
     });
 
-    beforeEach(() => {
-        vi.clearAllMocks();
+    it("should not create a user with a already registered email", async () => {
+
+      vi.spyOn(usersRepository, "findByEmail").mockResolvedValueOnce({
+        id: faker.number.int(),
+        email: input.email,
+        name: faker.person.fullName(),
+        bio: faker.person.bio()
+      });
+
+      await expect(useCase.execute(input)).rejects.toThrow(new EmailAlreadyRegisteredError(input.email));
+
+      expect(usersRepository.createUser).not.toHaveBeenCalled();
     });
+  });
 
-    describe("given a valid input", () => {
+  describe("given an invalid input", () => {
 
-        const input: CreateUserInput = {
-            name: faker.person.fullName(),
-            bio: faker.person.bio(),
-            email: faker.internet.email().toLocaleLowerCase()
-        };
+    const input: CreateUserInput = {
+      name: "a",
+      email: "invalid-email"
+    };
 
-        it("should create a user", async () => {
+    it("should not create a user", async () => {
+      await expect(useCase.execute(input)).rejects.toThrow(ZodError);
 
-            vi.spyOn(usersRepository, "createUser").mockResolvedValueOnce({ id: 1 });
-
-            const result = await useCase.execute(input);
-
-            expect(result).toBe(1);
-        });
-
-        it("should not create a user with a already registered email", async () => {
-
-            vi.spyOn(usersRepository, "findByEmail").mockResolvedValueOnce({
-                id: faker.number.int(),
-                email: input.email,
-                name: faker.person.fullName(),
-                bio: faker.person.bio()
-            });
-
-            await expect(useCase.execute(input)).rejects.toThrow(new EmailAlreadyRegisteredError(input.email));
-
-            expect(usersRepository.createUser).not.toHaveBeenCalled();
-        });
+      expect(usersRepository.findByEmail).not.toHaveBeenCalled();
+      expect(usersRepository.createUser).not.toHaveBeenCalled();
     });
-
-    describe("given an invalid input", () => {
-
-        const input: CreateUserInput = {
-            name: "a",
-            email: "invalid-email"
-        };
-
-        it("should not create a user", async () => {
-            await expect(useCase.execute(input)).rejects.toThrow(ZodError);
-
-            expect(usersRepository.findByEmail).not.toHaveBeenCalled();
-            expect(usersRepository.createUser).not.toHaveBeenCalled();
-        });
-    });
+  });
 });

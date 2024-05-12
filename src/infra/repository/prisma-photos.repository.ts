@@ -8,16 +8,16 @@ import { CreatePhotoRepositoryInput, CreatePhotoRepositoryOutput } from "../../c
  */
 export class PrismaPhotosRepository implements PhotosRepository {
 
-    constructor(private readonly prisma: PrismaClient) {}
-    async create(createPhotoInput: CreatePhotoRepositoryInput): Promise<CreatePhotoRepositoryOutput> {
-        const { filename } = createPhotoInput;
+  constructor(private readonly prisma: PrismaClient) {}
+  async create(createPhotoInput: CreatePhotoRepositoryInput): Promise<CreatePhotoRepositoryOutput> {
+    const { filename } = createPhotoInput;
 
-        const result = await this.prisma.photo.create({
-            data: {
-                filename
-            }
-        });
+    const result = await this.prisma.photo.create({
+      data: {
+        filename
+      }
+    });
 
-        return { id: result.id };
-    }
+    return { id: result.id };
+  }
 }

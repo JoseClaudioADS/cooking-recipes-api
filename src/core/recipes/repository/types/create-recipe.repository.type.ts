@@ -8,6 +8,7 @@ export type CreateRecipeRepositoryInput = {
   }[];
   photoId: number;
   userId: number;
+  categoryId: number;
 }
 
 export type CreateRecipeRepositoryOutput = {
