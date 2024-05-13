@@ -88,11 +88,15 @@ export const recipeIngredientsTable = pgTable("recipe_ingredients", {
 });
 
 export const usersRelations = relations(usersTable, ({ one, many }) => ({
-  magicLink: one(magicLinksTable, {
-    fields: [usersTable.id],
-    references: [magicLinksTable.userId],
-  }),
+  magicLink: one(magicLinksTable),
   recipes: many(recipesTable),
+}));
+
+export const magicLinksRelations = relations(magicLinksTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [magicLinksTable.userId],
+    references: [usersTable.id],
+  }),
 }));
 
 export const recipesRelations = relations(recipesTable, ({ one, many }) => ({

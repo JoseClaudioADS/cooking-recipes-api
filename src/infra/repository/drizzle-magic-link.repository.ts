@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { MagicLink } from "../../core/magic-link/entity/magic-link";
 import { MagicLinkRepository } from "../../core/magic-link/repository/magic-link.repository";
 import { User } from "../../core/users/entity/user";
@@ -10,7 +10,7 @@ import { magicLinksTable, usersTable } from "../db/drizzle-db-schema";
  *
  */
 export class DrizzleMagicLinkRepository implements MagicLinkRepository {
-  constructor(private readonly db: NodePgDatabase<typeof schema>) {}
+  constructor(private readonly db: PostgresJsDatabase<typeof schema>) {}
 
   async createMagicLink(user: User, token: string): Promise<void> {
     await this.db.insert(magicLinksTable).values({
@@ -51,27 +51,26 @@ export class DrizzleMagicLinkRepository implements MagicLinkRepository {
   }
 
   async findByToken(token: string): Promise<MagicLink | null> {
-    const result = await this.db
-      .select()
-      .from(magicLinksTable)
-      .innerJoin(usersTable, eq(magicLinksTable.userId, usersTable.id))
-      .where(eq(magicLinksTable.token, token));
+    const magicLink = await this.db.query.magicLinksTable.findFirst({
+      with: {
+        user: true,
+      },
+      where: eq(magicLinksTable.token, token),
+    });
 
-    if (result.length === 0) {
+    if (!magicLink) {
       return null;
     }
 
-    const magicLink = result[0];
-
     return {
-      token: magicLink.magic_links.token,
+      token: magicLink.token,
       user: {
-        id: magicLink.users.id,
-        name: magicLink.users.name,
-        email: magicLink.users.email,
-        bio: magicLink.users.bio,
+        id: magicLink.user.id,
+        name: magicLink.user.name,
+        email: magicLink.user.email,
+        bio: magicLink.user.bio,
       },
-      createdAt: magicLink.magic_links.createdAt,
+      createdAt: magicLink.createdAt,
     };
   }
 }

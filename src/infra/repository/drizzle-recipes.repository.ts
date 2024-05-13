@@ -1,5 +1,5 @@
-import { count, eq, ilike } from "drizzle-orm";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { and, count, eq, ilike } from "drizzle-orm";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { RecipesRepository } from "../../core/recipes/repository/recipes.repository";
 import {
   CreateRecipeRepositoryInput,
@@ -10,19 +10,19 @@ import {
   SearchRecipesRepositoryOutput,
 } from "../../core/recipes/repository/types/search-recipes.repository.type";
 import * as schema from "../db/drizzle-db-schema";
+import { recipeIngredientsTable, recipesTable } from "../db/drizzle-db-schema";
 import {
-  categoriesTable,
-  photosTable,
-  recipeIngredientsTable,
-  recipesTable,
-  usersTable,
-} from "../db/drizzle-db-schema";
+  categoryAlias,
+  photoAlias,
+  recipeAlias,
+  userAlias,
+} from "./drizzle-helper";
 
 /**
  *
  */
 export class DrizzleRecipesRepository implements RecipesRepository {
-  constructor(private readonly db: NodePgDatabase<typeof schema>) {}
+  constructor(private readonly db: PostgresJsDatabase<typeof schema>) {}
 
   async create(
     createRecipeInput: CreateRecipeRepositoryInput,
@@ -71,21 +71,24 @@ export class DrizzleRecipesRepository implements RecipesRepository {
   ): Promise<SearchRecipesRepositoryOutput> {
     const { title } = searchRecipeInput;
 
+    const conditions = [];
+
+    if (title) {
+      conditions.push(ilike(recipeAlias.title, `%${title}%`));
+    }
+
     const total = await this.db
       .select({ total: count() })
       .from(recipesTable)
-      .where(ilike(recipesTable.title, `%${title}%`));
+      .where(and(...conditions));
 
     const result = await this.db
       .select()
-      .from(recipesTable)
-      .innerJoin(usersTable, eq(recipesTable.userId, usersTable.id))
-      .innerJoin(photosTable, eq(recipesTable.photoId, photosTable.id))
-      .innerJoin(
-        categoriesTable,
-        eq(recipesTable.categoryId, categoriesTable.id),
-      )
-      .where(ilike(recipesTable.title, `%${title}%`));
+      .from(recipeAlias)
+      .innerJoin(userAlias, eq(recipeAlias.userId, userAlias.id))
+      .innerJoin(photoAlias, eq(recipeAlias.photoId, photoAlias.id))
+      .innerJoin(categoryAlias, eq(recipeAlias.categoryId, categoryAlias.id))
+      .where(and(...conditions));
 
     if (result.length === 0) {
       return {
@@ -97,10 +100,7 @@ export class DrizzleRecipesRepository implements RecipesRepository {
     return {
       total: total[0].total,
       items: result.map((r) => {
-        const recipe = r.recipes; // TODO improve relation names
-        const user = r.users;
-        const photo = r.photos;
-        const category = r.categories;
+        const { recipe, user, photo, category } = r;
 
         return {
           id: recipe.id,

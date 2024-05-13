@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import db from "../../infra/db/drizzle-db";
+import { db } from "../../infra/db/drizzle-db";
 import { DrizzleMagicLinkRepository } from "../../infra/repository/drizzle-magic-link.repository";
 import { DrizzlePhotosRepository } from "../../infra/repository/drizzle-photos.repository";
 import { DrizzleRecipesRepository } from "../../infra/repository/drizzle-recipes.repository";

@@ -1,4 +1,4 @@
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { PhotosRepository } from "../../core/photos/repository/photos.repository";
 import {
   CreatePhotoRepositoryInput,
@@ -11,7 +11,7 @@ import { photosTable } from "../db/drizzle-db-schema";
  *
  */
 export class DrizzlePhotosRepository implements PhotosRepository {
-  constructor(private readonly db: NodePgDatabase<typeof schema>) {}
+  constructor(private readonly db: PostgresJsDatabase<typeof schema>) {}
   async create(
     createPhotoInput: CreatePhotoRepositoryInput,
   ): Promise<CreatePhotoRepositoryOutput> {

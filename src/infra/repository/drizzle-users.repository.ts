@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { User } from "../../core/users/entity/user";
 import {
   CreateUserRepositoryInput,
@@ -13,7 +13,7 @@ import { usersTable } from "../db/drizzle-db-schema";
  *
  */
 export class DrizzleUsersRepository implements UsersRepository {
-  constructor(private readonly db: NodePgDatabase<typeof schema>) {}
+  constructor(private readonly db: PostgresJsDatabase<typeof schema>) {}
 
   async createUser({
     name,
@@ -33,16 +33,13 @@ export class DrizzleUsersRepository implements UsersRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const result = await this.db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.email, email));
+    const user = await this.db.query.usersTable.findFirst({
+      where: eq(usersTable.email, email),
+    });
 
-    if (result.length === 0) {
+    if (!user) {
       return null;
     }
-
-    const user = result[0];
 
     return {
       id: user.id,
