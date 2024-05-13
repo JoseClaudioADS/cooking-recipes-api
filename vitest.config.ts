@@ -9,11 +9,10 @@ export default defineConfig({
   test: {
     clearMocks: true,
     globals: true,
+    globalSetup: ["./tests/db/setup.ts"],
     setupFiles: ["dotenv/config"],
     env: {
       NODE_ENV: "test",
-      DATABASE_URL:
-        "postgresql://cooking-recipes-user:cooking-recipes-password@localhost:5432/cooking-recipes-test?schema=public",
     },
   },
   resolve: {

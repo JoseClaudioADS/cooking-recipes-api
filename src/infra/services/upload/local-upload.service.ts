@@ -17,7 +17,7 @@ export class LocalUploadService implements UploadService {
   }
 
   // eslint-disable-next-line class-methods-use-this -- Disabling because it's just for test purposes
-  getUrl(filename: string): string {
-    return `${env.API_URL}${env.UPLOAD_FILE_PATH}/${filename}`;
+  getUrl(_: string): string {
+    return "https://picsum.photos/200"; // Returning aleatory url
   }
 }

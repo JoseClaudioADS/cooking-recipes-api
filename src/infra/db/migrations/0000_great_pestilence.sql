@@ -1,32 +1,34 @@
 CREATE TABLE IF NOT EXISTS "categories" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(256)
+	"name" varchar(256) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "magic_links" (
 	"token" varchar(256) PRIMARY KEY NOT NULL,
-	"created_at" timestamp DEFAULT now(),
+	"created_at" timestamp DEFAULT now() NOT NULL,
 	"user_id" serial NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "photos" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"filename" varchar(256)
+	"filename" varchar(256) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "recipe_ingredients" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"ingredient" varchar(256),
+	"ingredient" varchar(40),
+	"name" varchar(256) NOT NULL,
 	"recipe_id" serial NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "recipes" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"title" varchar(256),
+	"title" varchar(256) NOT NULL,
 	"description" varchar(256),
-	"preparation_time" integer,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
+	"preparation_time" integer NOT NULL,
+	"steps" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"user_id" serial NOT NULL,
 	"photo_id" serial NOT NULL,
 	"category_id" serial NOT NULL
@@ -34,10 +36,10 @@ CREATE TABLE IF NOT EXISTS "recipes" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(256),
-	"email" varchar(256),
+	"name" varchar(256) NOT NULL,
+	"email" varchar(256) NOT NULL,
 	"bio" varchar(256),
-	"created_at" timestamp DEFAULT now()
+	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 DO $$ BEGIN

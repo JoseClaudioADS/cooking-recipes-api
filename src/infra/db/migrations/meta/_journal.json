@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1715516516279,
-      "tag": "0000_minor_supreme_intelligence",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1715516772327,
-      "tag": "0001_little_black_bird",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1715520069624,
-      "tag": "0002_nappy_nextwave",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1715521326847,
-      "tag": "0003_plain_glorian",
+      "when": 1715607770274,
+      "tag": "0000_great_pestilence",
       "breakpoints": true
     }
   ]
