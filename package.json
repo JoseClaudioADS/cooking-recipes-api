@@ -8,6 +8,7 @@
     "build": "tsc -p .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx ./src/infra/db/drizzle-db-migrate.ts",
+    "db:seed": "tsx ./db/seed.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
