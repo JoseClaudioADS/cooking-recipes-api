@@ -6,7 +6,8 @@
     "start": "ts-node src/app.ts",
     "start:dev": "nodemon src/app.ts",
     "build": "tsc -p .",
-    "db:migrate": "ts-node src/infra/db/drizzle-db-migrate.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx ./src/infra/db/drizzle-db-migrate.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
@@ -37,6 +38,7 @@
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
+    "tsx": "^4.10.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0",
     "vitest": "^1.6.0"
@@ -52,6 +54,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "pg": "^8.11.5",
+    "postgres": "^3.4.4",
     "winston": "^3.13.0",
     "zod": "^3.23.7"
   }
