@@ -7,7 +7,7 @@ import {
 } from "../../core/users/repository/types/create-user.repository.type";
 import { UsersRepository } from "../../core/users/repository/users.repository";
 import * as schema from "../db/drizzle-db-schema";
-import { users } from "../db/drizzle-db-schema";
+import { usersTable } from "../db/drizzle-db-schema";
 
 /**
  *
@@ -21,13 +21,13 @@ export class DrizzleUsersRepository implements UsersRepository {
     email,
   }: CreateUserRepositoryInput): Promise<CreateUserRepositoryOutput> {
     const user = await this.db
-      .insert(users)
+      .insert(usersTable)
       .values({
         name,
         bio,
         email,
       })
-      .returning({ id: users.id });
+      .returning({ id: usersTable.id });
 
     return { id: user[0].id };
   }
@@ -35,8 +35,8 @@ export class DrizzleUsersRepository implements UsersRepository {
   async findByEmail(email: string): Promise<User | null> {
     const result = await this.db
       .select()
-      .from(users)
-      .where(eq(users.email, email));
+      .from(usersTable)
+      .where(eq(usersTable.email, email));
 
     if (result.length === 0) {
       return null;

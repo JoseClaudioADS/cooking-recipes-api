@@ -11,11 +11,11 @@ import {
 } from "../../core/recipes/repository/types/search-recipes.repository.type";
 import * as schema from "../db/drizzle-db-schema";
 import {
-  categories,
-  photos,
-  recipeIngredients,
-  recipes,
-  users,
+  categoriesTable,
+  photosTable,
+  recipeIngredientsTable,
+  recipesTable,
+  usersTable,
 } from "../db/drizzle-db-schema";
 
 /**
@@ -40,7 +40,7 @@ export class DrizzleRecipesRepository implements RecipesRepository {
 
     return this.db.transaction(async (tx) => {
       const recipeInsertResult = await tx
-        .insert(recipes)
+        .insert(recipesTable)
         .values({
           title,
           description,
@@ -50,7 +50,7 @@ export class DrizzleRecipesRepository implements RecipesRepository {
           userId,
           categoryId,
         })
-        .returning({ id: recipes.id });
+        .returning({ id: recipesTable.id });
 
       const recipeId = recipeInsertResult[0].id;
 
@@ -60,7 +60,7 @@ export class DrizzleRecipesRepository implements RecipesRepository {
         recipeId,
       }));
 
-      await tx.insert(recipeIngredients).values(mappedIngredients);
+      await tx.insert(recipeIngredientsTable).values(mappedIngredients);
 
       return { id: recipeId };
     });
@@ -73,16 +73,19 @@ export class DrizzleRecipesRepository implements RecipesRepository {
 
     const total = await this.db
       .select({ total: count() })
-      .from(recipes)
-      .where(ilike(recipes.title, `%${title}%`));
+      .from(recipesTable)
+      .where(ilike(recipesTable.title, `%${title}%`));
 
     const result = await this.db
       .select()
-      .from(recipes)
-      .innerJoin(users, eq(recipes.userId, users.id))
-      .innerJoin(photos, eq(recipes.photoId, photos.id))
-      .innerJoin(categories, eq(recipes.categoryId, categories.id))
-      .where(ilike(recipes.title, `%${title}%`));
+      .from(recipesTable)
+      .innerJoin(usersTable, eq(recipesTable.userId, usersTable.id))
+      .innerJoin(photosTable, eq(recipesTable.photoId, photosTable.id))
+      .innerJoin(
+        categoriesTable,
+        eq(recipesTable.categoryId, categoriesTable.id),
+      )
+      .where(ilike(recipesTable.title, `%${title}%`));
 
     if (result.length === 0) {
       return {

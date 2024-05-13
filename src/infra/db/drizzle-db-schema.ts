@@ -9,7 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const users = pgTable(
+export const usersTable = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
@@ -18,46 +18,48 @@ export const users = pgTable(
     bio: varchar("bio", { length: 256 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (usersTable) => {
+  (definedUsersTable) => {
     return {
-      emailIndex: uniqueIndex("email_idx").on(usersTable.email),
+      emailIndex: uniqueIndex("email_idx").on(definedUsersTable.email),
     };
   },
 );
 
-export const magicLinks = pgTable("magic_links", {
+export const magicLinksTable = pgTable("magic_links", {
   token: varchar("token", { length: 256 }).primaryKey(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  userId: serial("user_id").references(() => users.id),
+  userId: serial("user_id").references(() => usersTable.id),
 });
 
-export const photos = pgTable(
+export const photosTable = pgTable(
   "photos",
   {
     id: serial("id").primaryKey(),
     filename: varchar("filename", { length: 256 }).notNull(),
   },
-  (photosTable) => {
+  (definedPhotosTable) => {
     return {
-      filenameIndex: uniqueIndex("filename_idx").on(photosTable.filename),
+      filenameIndex: uniqueIndex("filename_idx").on(
+        definedPhotosTable.filename,
+      ),
     };
   },
 );
 
-export const categories = pgTable(
+export const categoriesTable = pgTable(
   "categories",
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
   },
-  (categoriesTable) => {
+  (definedCategoriesTable) => {
     return {
-      nameIndex: uniqueIndex("name_idx").on(categoriesTable.name),
+      nameIndex: uniqueIndex("name_idx").on(definedCategoriesTable.name),
     };
   },
 );
 
-export const recipes = pgTable(
+export const recipesTable = pgTable(
   "recipes",
   {
     id: serial("id").primaryKey(),
@@ -67,54 +69,54 @@ export const recipes = pgTable(
     steps: text("steps").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
-    userId: serial("user_id").references(() => users.id),
-    photoId: serial("photo_id").references(() => photos.id),
-    categoryId: serial("category_id").references(() => categories.id),
+    userId: serial("user_id").references(() => usersTable.id),
+    photoId: serial("photo_id").references(() => photosTable.id),
+    categoryId: serial("category_id").references(() => categoriesTable.id),
   },
-  (recipesTable) => {
+  (definedRecipesTable) => {
     return {
-      titleIndex: uniqueIndex("title_idx").on(recipesTable.title),
+      titleIndex: uniqueIndex("title_idx").on(definedRecipesTable.title),
     };
   },
 );
 
-export const recipeIngredients = pgTable("recipe_ingredients", {
+export const recipeIngredientsTable = pgTable("recipe_ingredients", {
   id: serial("id").primaryKey(),
   quantity: varchar("ingredient", { length: 40 }),
   name: varchar("name", { length: 256 }).notNull(),
-  recipeId: serial("recipe_id").references(() => recipes.id),
+  recipeId: serial("recipe_id").references(() => recipesTable.id),
 });
 
-export const usersRelations = relations(users, ({ one, many }) => ({
-  magicLink: one(magicLinks, {
-    fields: [users.id],
-    references: [magicLinks.userId],
+export const usersRelations = relations(usersTable, ({ one, many }) => ({
+  magicLink: one(magicLinksTable, {
+    fields: [usersTable.id],
+    references: [magicLinksTable.userId],
   }),
-  recipes: many(recipes),
+  recipes: many(recipesTable),
 }));
 
-export const recipesRelations = relations(recipes, ({ one, many }) => ({
-  user: one(users, {
-    fields: [recipes.userId],
-    references: [users.id],
+export const recipesRelations = relations(recipesTable, ({ one, many }) => ({
+  user: one(usersTable, {
+    fields: [recipesTable.userId],
+    references: [usersTable.id],
   }),
-  category: one(categories, {
-    fields: [recipes.categoryId],
-    references: [categories.id],
+  category: one(categoriesTable, {
+    fields: [recipesTable.categoryId],
+    references: [categoriesTable.id],
   }),
-  photo: one(recipes, {
-    fields: [recipes.photoId],
-    references: [recipes.id],
+  photo: one(recipesTable, {
+    fields: [recipesTable.photoId],
+    references: [recipesTable.id],
   }),
-  ingredients: many(recipeIngredients),
+  ingredients: many(recipeIngredientsTable),
 }));
 
 export const recipeIngredientsRelations = relations(
-  recipeIngredients,
+  recipeIngredientsTable,
   ({ one }) => ({
-    recipe: one(recipes, {
-      fields: [recipeIngredients.recipeId],
-      references: [recipes.id],
+    recipe: one(recipesTable, {
+      fields: [recipeIngredientsTable.recipeId],
+      references: [recipesTable.id],
     }),
   }),
 );

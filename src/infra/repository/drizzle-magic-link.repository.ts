@@ -4,7 +4,7 @@ import { MagicLink } from "../../core/magic-link/entity/magic-link";
 import { MagicLinkRepository } from "../../core/magic-link/repository/magic-link.repository";
 import { User } from "../../core/users/entity/user";
 import * as schema from "../db/drizzle-db-schema";
-import { magicLinks, users } from "../db/drizzle-db-schema";
+import { magicLinksTable, usersTable } from "../db/drizzle-db-schema";
 
 /**
  *
@@ -13,22 +13,24 @@ export class DrizzleMagicLinkRepository implements MagicLinkRepository {
   constructor(private readonly db: NodePgDatabase<typeof schema>) {}
 
   async createMagicLink(user: User, token: string): Promise<void> {
-    await this.db.insert(magicLinks).values({
+    await this.db.insert(magicLinksTable).values({
       userId: user.id,
       token,
     });
   }
 
   async deleteMagicLink(token: string): Promise<void> {
-    await this.db.delete(magicLinks).where(eq(magicLinks.token, token));
+    await this.db
+      .delete(magicLinksTable)
+      .where(eq(magicLinksTable.token, token));
   }
 
   async findByEmail(email: string): Promise<MagicLink | null> {
     const result = await this.db
       .select()
-      .from(magicLinks)
-      .innerJoin(users, eq(magicLinks.userId, users.id))
-      .where(eq(users.email, email));
+      .from(magicLinksTable)
+      .innerJoin(usersTable, eq(magicLinksTable.userId, usersTable.id))
+      .where(eq(usersTable.email, email));
 
     if (result.length === 0) {
       return null;
@@ -51,9 +53,9 @@ export class DrizzleMagicLinkRepository implements MagicLinkRepository {
   async findByToken(token: string): Promise<MagicLink | null> {
     const result = await this.db
       .select()
-      .from(magicLinks)
-      .innerJoin(users, eq(magicLinks.userId, users.id))
-      .where(eq(magicLinks.token, token));
+      .from(magicLinksTable)
+      .innerJoin(usersTable, eq(magicLinksTable.userId, usersTable.id))
+      .where(eq(magicLinksTable.token, token));
 
     if (result.length === 0) {
       return null;

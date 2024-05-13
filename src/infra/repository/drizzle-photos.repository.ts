@@ -5,7 +5,7 @@ import {
   CreatePhotoRepositoryOutput,
 } from "../../core/photos/repository/types/create-photo.repository.type";
 import * as schema from "../db/drizzle-db-schema";
-import { photos } from "../db/drizzle-db-schema";
+import { photosTable } from "../db/drizzle-db-schema";
 
 /**
  *
@@ -18,9 +18,9 @@ export class DrizzlePhotosRepository implements PhotosRepository {
     const { filename } = createPhotoInput;
 
     const result = await this.db
-      .insert(photos)
+      .insert(photosTable)
       .values({ filename })
-      .returning({ id: photos.id });
+      .returning({ id: photosTable.id });
 
     return { id: result[0].id };
   }
