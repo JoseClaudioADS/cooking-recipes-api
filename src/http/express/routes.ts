@@ -53,6 +53,10 @@ recipesRouter.post(
   recipesController.create.bind(recipesController),
 );
 recipesRouter.get("/", recipesController.search.bind(recipesController));
+recipesRouter.get(
+  "/categories",
+  recipesController.getCategories.bind(recipesController),
+);
 
 // Photos routes
 const photosRouter = Router();

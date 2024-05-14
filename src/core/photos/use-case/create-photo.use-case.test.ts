@@ -13,7 +13,7 @@ describe("CreatePhotoUseCase", () => {
 
   const authUser: AuthUser = {
     id: faker.number.int(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     email: faker.internet.email(),
   };
 

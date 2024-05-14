@@ -11,9 +11,9 @@
     "db:seed": "tsx ./db/seed.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest run",
-    "test:watch": "vitest watch",
-    "test:e2e": "vitest run --dir ./tests/e2e --no-file-parallelism"
+    "test": "vitest run --dir ./src",
+    "test:watch": "vitest watch --dir ./src",
+    "test:e2e": "vitest run --dir ./tests/e2e --no-file-parallelism -c vitest.config.e2e.ts"
   },
   "keywords": [],
   "author": "Jose Claudio",

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { RecipesRepository } from "../../../core/recipes/repository/recipes.repository";
 import { CreateRecipeUseCase } from "../../../core/recipes/use-case/create-recipe.use-case";
+import { GetCategoriesUseCase } from "../../../core/recipes/use-case/get-categories.use-case";
 import { SearchRecipesUseCase } from "../../../core/recipes/use-case/search-recipes.use-case";
 import { UploadService } from "../../../core/shared/services/upload.service";
 
@@ -10,6 +11,7 @@ import { UploadService } from "../../../core/shared/services/upload.service";
 export class RecipesController {
   private readonly createRecipeUseCase: CreateRecipeUseCase;
   private readonly searchRecipesUseCase: SearchRecipesUseCase;
+  private readonly getCategoriesUseCase: GetCategoriesUseCase;
 
   constructor(
     readonly recipesRepository: RecipesRepository,
@@ -20,6 +22,7 @@ export class RecipesController {
       recipesRepository,
       uploadService,
     );
+    this.getCategoriesUseCase = new GetCategoriesUseCase(recipesRepository);
   }
 
   async create(req: Request, res: Response): Promise<void> {
@@ -37,5 +40,11 @@ export class RecipesController {
     const result = await this.searchRecipesUseCase.execute(req.query);
 
     res.json(result);
+  }
+
+  async getCategories(req: Request, res: Response): Promise<void> {
+    const categories = await this.getCategoriesUseCase.execute();
+
+    res.json(categories);
   }
 }

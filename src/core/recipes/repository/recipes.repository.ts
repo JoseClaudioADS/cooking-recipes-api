@@ -1,3 +1,4 @@
+import { Category } from "../entity/category";
 import {
   CreateRecipeRepositoryInput,
   CreateRecipeRepositoryOutput,
@@ -15,4 +16,6 @@ export interface RecipesRepository {
   search(
     searchRecipeInput: SearchRecipesRepositoryInput,
   ): Promise<SearchRecipesRepositoryOutput>;
+
+  getCategories(): Promise<Category[]>;
 }

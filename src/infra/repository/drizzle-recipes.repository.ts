@@ -1,5 +1,6 @@
-import { and, count, eq, ilike } from "drizzle-orm";
+import { and, asc, count, eq, ilike } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { Category } from "../../core/recipes/entity/category";
 import { RecipesRepository } from "../../core/recipes/repository/recipes.repository";
 import {
   CreateRecipeRepositoryInput,
@@ -125,5 +126,11 @@ export class DrizzleRecipesRepository implements RecipesRepository {
         };
       }),
     };
+  }
+
+  async getCategories(): Promise<Category[]> {
+    return this.db.query.categoriesTable.findMany({
+      orderBy: [asc(schema.categoriesTable.name)],
+    });
   }
 }

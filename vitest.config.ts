@@ -9,7 +9,6 @@ export default defineConfig({
   test: {
     clearMocks: true,
     globals: true,
-    globalSetup: ["./tests/db/setup.ts"],
     setupFiles: ["dotenv/config"],
     env: {
       NODE_ENV: "test",
