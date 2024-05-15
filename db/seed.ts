@@ -60,7 +60,7 @@ async function seed() {
 
   const recipesRepository = new DrizzleRecipesRepository(db);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 50; i++) {
     await recipesRepository.create({
       categoryId:
         categories[faker.number.int({ min: 0, max: categorieNames.length - 1 })]
