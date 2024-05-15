@@ -15,7 +15,11 @@ const searchRecipesSchema = z.object({
     .string()
     .optional()
     .default("1")
-    .transform((page) => Math.min(Number(page), 1)),
+    .transform((page) => {
+      const pageNumber = Number(page);
+
+      return pageNumber > 0 ? pageNumber : 1;
+    }),
   size: z
     .enum(["15", "30"])
     .optional()
