@@ -14,11 +14,13 @@ const searchRecipesSchema = z.object({
   page: z
     .string()
     .optional()
-    .transform((page) => Number(page) || void 0),
+    .default("1")
+    .transform((page) => Math.min(Number(page), 1)),
   size: z
-    .string()
+    .enum(["15", "30"])
     .optional()
-    .transform((size) => Number(size) || void 0),
+    .default("15")
+    .transform((size) => Number(size)),
 });
 
 export type SearchRecipesInput = z.infer<typeof searchRecipesSchema>;

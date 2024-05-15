@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import { RecipesRepository } from "../../../core/recipes/repository/recipes.repository";
 import { CreateRecipeUseCase } from "../../../core/recipes/use-case/create-recipe.use-case";
 import { GetCategoriesUseCase } from "../../../core/recipes/use-case/get-categories.use-case";
-import { SearchRecipesUseCase } from "../../../core/recipes/use-case/search-recipes.use-case";
+import {
+  SearchRecipesInput,
+  SearchRecipesUseCase,
+} from "../../../core/recipes/use-case/search-recipes.use-case";
 import { UploadService } from "../../../core/shared/services/upload.service";
 
 /**
@@ -37,7 +40,9 @@ export class RecipesController {
   }
 
   async search(req: Request, res: Response): Promise<void> {
-    const result = await this.searchRecipesUseCase.execute(req.query);
+    const result = await this.searchRecipesUseCase.execute(
+      req.query as unknown as SearchRecipesInput,
+    );
 
     res.json(result);
   }
