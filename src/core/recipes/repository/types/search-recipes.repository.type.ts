@@ -1,5 +1,12 @@
+import { SortByProperty } from "../../use-case/search-recipes.use-case";
+
 export type SearchRecipesRepositoryInput = {
   title?: string;
+  categoryId?: number;
+  q?: string;
+  sortBy?: SortByProperty;
+  page?: number;
+  size?: number;
 };
 
 export type SearchRecipesRepositoryOutput = {

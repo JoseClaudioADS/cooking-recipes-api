@@ -1,12 +1,29 @@
 import * as z from "zod";
 import { UploadService } from "../../shared/services/upload.service";
+import { Category } from "../entity/category";
 import { RecipesRepository } from "../repository/recipes.repository";
 
 const searchRecipesSchema = z.object({
   title: z.string().optional(),
+  categoryId: z
+    .string()
+    .optional()
+    .transform((categoryId) => Number(categoryId) || void 0),
+  q: z.string().optional(),
+  sortBy: z.enum(["most-loved", "most-recents"]).optional(),
+  page: z
+    .string()
+    .optional()
+    .transform((page) => Number(page) || void 0),
+  size: z
+    .string()
+    .optional()
+    .transform((size) => Number(size) || void 0),
 });
 
 export type SearchRecipesInput = z.infer<typeof searchRecipesSchema>;
+
+export type SortByProperty = z.infer<typeof searchRecipesSchema>["sortBy"];
 
 export type SearchRecipesOutput = {
   total: number;
@@ -21,6 +38,7 @@ export type SearchRecipesOutput = {
       id: number;
       name: string;
     };
+    category: Category;
     createdAt: Date;
     updatedAt: Date;
   }[];
@@ -38,9 +56,12 @@ export class SearchRecipesUseCase {
   async execute(
     searchRecipesInput: SearchRecipesInput,
   ): Promise<SearchRecipesOutput> {
-    searchRecipesSchema.parse(searchRecipesInput);
+    const searchRecipesInputParsed =
+      searchRecipesSchema.parse(searchRecipesInput);
 
-    const result = await this.recipesRepository.search({});
+    const result = await this.recipesRepository.search(
+      searchRecipesInputParsed,
+    );
 
     const mappedResult = result.items.map((recipe) => ({
       id: recipe.id,
@@ -53,6 +74,7 @@ export class SearchRecipesUseCase {
         id: recipe.user.id,
         name: recipe.user.name,
       },
+      category: recipe.category,
       createdAt: recipe.createdAt,
       updatedAt: recipe.updatedAt,
     }));

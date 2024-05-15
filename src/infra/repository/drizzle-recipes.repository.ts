@@ -1,4 +1,4 @@
-import { and, asc, count, eq, ilike } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { Category } from "../../core/recipes/entity/category";
 import { RecipesRepository } from "../../core/recipes/repository/recipes.repository";
@@ -23,6 +23,9 @@ import {
  *
  */
 export class DrizzleRecipesRepository implements RecipesRepository {
+  private readonly DEFAULT_PAGE_SIZE = 15;
+  private readonly DEFAULT_PAGE = 1;
+
   constructor(private readonly db: PostgresJsDatabase<typeof schema>) {}
 
   async create(
@@ -70,17 +73,48 @@ export class DrizzleRecipesRepository implements RecipesRepository {
   async search(
     searchRecipeInput: SearchRecipesRepositoryInput,
   ): Promise<SearchRecipesRepositoryOutput> {
-    const { title } = searchRecipeInput;
+    const {
+      categoryId,
+      q,
+      sortBy,
+      page = this.DEFAULT_PAGE,
+      size = this.DEFAULT_PAGE_SIZE,
+    } = searchRecipeInput;
 
     const conditions = [];
 
-    if (title) {
-      conditions.push(ilike(recipeAlias.title, `%${title}%`));
+    if (categoryId) {
+      conditions.push(eq(recipeAlias.categoryId, categoryId));
+    }
+
+    if (q) {
+      conditions.push(
+        or(
+          ilike(recipeAlias.title, `%${q}%`),
+          ilike(recipeAlias.description, `%${q}%`),
+        ),
+      );
+    }
+
+    let sortClause = desc(recipeAlias.createdAt);
+
+    switch (sortBy) {
+      case "most-loved":
+        // sortClause = desc(recipeAlias.likes);
+        break;
+      case "most-recents":
+        sortClause = desc(recipeAlias.createdAt);
+        break;
+      default:
+        break;
     }
 
     const total = await this.db
       .select({ total: count() })
-      .from(recipesTable)
+      .from(recipeAlias)
+      .innerJoin(userAlias, eq(recipeAlias.userId, userAlias.id))
+      .innerJoin(photoAlias, eq(recipeAlias.photoId, photoAlias.id))
+      .innerJoin(categoryAlias, eq(recipeAlias.categoryId, categoryAlias.id))
       .where(and(...conditions));
 
     const result = await this.db
@@ -89,7 +123,10 @@ export class DrizzleRecipesRepository implements RecipesRepository {
       .innerJoin(userAlias, eq(recipeAlias.userId, userAlias.id))
       .innerJoin(photoAlias, eq(recipeAlias.photoId, photoAlias.id))
       .innerJoin(categoryAlias, eq(recipeAlias.categoryId, categoryAlias.id))
-      .where(and(...conditions));
+      .where(and(...conditions))
+      .limit(size)
+      .offset((page - 1) * size)
+      .orderBy(sortClause);
 
     if (result.length === 0) {
       return {
