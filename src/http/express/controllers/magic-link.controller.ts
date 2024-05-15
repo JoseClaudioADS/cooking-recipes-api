@@ -45,6 +45,6 @@ export class MagicLinkController {
       secure: env.NODE_ENV === "production",
       sameSite: true,
     });
-    res.sendStatus(204);
+    res.redirect(302, env.WEB_URL);
   }
 }

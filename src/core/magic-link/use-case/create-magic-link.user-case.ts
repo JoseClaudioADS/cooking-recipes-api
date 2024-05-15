@@ -1,6 +1,7 @@
 import { sign } from "jsonwebtoken";
 import * as z from "zod";
 import env from "../../../utils/env";
+import logger from "../../../utils/logger";
 import { User } from "../../users/entity/user";
 import { UserByEmailNotFoundError } from "../../users/errors/user-by-email-not-found.error";
 import { UsersRepository } from "../../users/repository/users.repository";
@@ -50,6 +51,8 @@ export class CreateMagicLinkUseCase {
     await this.magicLinkRepository.createMagicLink(user, token);
 
     // TODO: send magic link
+    logger.info(`${env.API_URL}/magic-link/sign-in?token=${token}`);
+    // END TODO
 
     return {
       magicLink,
