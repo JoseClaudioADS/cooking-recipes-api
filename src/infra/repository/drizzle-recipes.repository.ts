@@ -128,13 +128,6 @@ export class DrizzleRecipesRepository implements RecipesRepository {
       .offset((page - 1) * size)
       .orderBy(sortClause);
 
-    if (result.length === 0) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
     return {
       total: total[0].total,
       items: result.map((r) => {
