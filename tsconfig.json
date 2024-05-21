@@ -6,9 +6,10 @@
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
     "strict": true, 
     "outDir": "./dist",
-    "lib": ["ES2023"]
+    "lib": ["ES2023"],
+    "skipLibCheck": true
   },
-  "include": ["./src/**/*"],
+  "include": ["src/**/*"],
   "ts-node": {
     "files": true
   }
