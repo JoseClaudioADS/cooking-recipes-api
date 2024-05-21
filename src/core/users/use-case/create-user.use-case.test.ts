@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { ZodError } from "zod";
+import { CreateMagicLinkService } from "../../magic-link/services/create-magic-link.service";
 import { EmailAlreadyRegisteredError } from "../errors/email-already-registered.error";
 import { UsersRepository } from "../repository/users.repository";
 import { CreateUserInput, CreateUserUseCase } from "./create-user.use-case";
@@ -8,6 +9,7 @@ import { CreateUserInput, CreateUserUseCase } from "./create-user.use-case";
 describe("CreateUserUseCase", () => {
   let useCase: CreateUserUseCase;
   let usersRepository: UsersRepository;
+  let createMagicLinkService: CreateMagicLinkService;
 
   beforeAll(() => {
     usersRepository = {
@@ -15,7 +17,11 @@ describe("CreateUserUseCase", () => {
       findByEmail: vi.fn(),
     } as unknown as UsersRepository;
 
-    useCase = new CreateUserUseCase(usersRepository);
+    createMagicLinkService = {
+      execute: vi.fn(),
+    } as unknown as CreateMagicLinkService;
+
+    useCase = new CreateUserUseCase(usersRepository, createMagicLinkService);
   });
 
   beforeEach(() => {
@@ -29,12 +35,26 @@ describe("CreateUserUseCase", () => {
       email: faker.internet.email().toLocaleLowerCase(),
     };
 
+    const user = {
+      id: faker.number.int(),
+      name: input.name,
+      bio: input.bio,
+      email: input.email,
+    };
+
     it("should create a user", async () => {
-      vi.spyOn(usersRepository, "createUser").mockResolvedValueOnce({ id: 1 });
+      vi.spyOn(usersRepository, "createUser").mockResolvedValueOnce({
+        id: user.id,
+      });
+      vi.spyOn(createMagicLinkService, "execute").mockResolvedValueOnce({
+        magicLink: faker.internet.url(),
+      });
 
       const result = await useCase.execute(input);
 
-      expect(result).toBe(1);
+      expect(result).toBe(user.id);
+      expect(usersRepository.createUser).toHaveBeenCalledWith(input);
+      expect(createMagicLinkService.execute).toHaveBeenCalledWith({ user });
     });
 
     it("should not create a user with a already registered email", async () => {
@@ -50,6 +70,7 @@ describe("CreateUserUseCase", () => {
       );
 
       expect(usersRepository.createUser).not.toHaveBeenCalled();
+      expect(createMagicLinkService.execute).not.toHaveBeenCalled();
     });
   });
 

@@ -5,6 +5,7 @@ import { User } from "../../users/entity/user";
 import { UserByEmailNotFoundError } from "../../users/errors/user-by-email-not-found.error";
 import { UsersRepository } from "../../users/repository/users.repository";
 import { MagicLinkRepository } from "../repository/magic-link.repository";
+import { CreateMagicLinkService } from "../services/create-magic-link.service";
 import {
   CreateMagicLinkInput,
   CreateMagicLinkUseCase,
@@ -14,19 +15,22 @@ describe("CreateMagicLinkUseCase", () => {
   let useCase: CreateMagicLinkUseCase;
   let usersRepository: UsersRepository;
   let magicLinkRepository: MagicLinkRepository;
+  let createMagicLinkService: CreateMagicLinkService;
 
   beforeAll(() => {
     usersRepository = {
       findByEmail: vi.fn(),
     } as unknown as UsersRepository;
 
-    magicLinkRepository = {
-      createMagicLink: vi.fn(),
-      deleteMagicLink: vi.fn(),
-      findByEmail: vi.fn(),
-    } as unknown as MagicLinkRepository;
+    createMagicLinkService = {
+      execute: vi.fn(),
+    } as unknown as CreateMagicLinkService;
 
-    useCase = new CreateMagicLinkUseCase(usersRepository, magicLinkRepository);
+    useCase = new CreateMagicLinkUseCase(
+      usersRepository,
+      magicLinkRepository,
+      createMagicLinkService,
+    );
   });
 
   beforeEach(() => {
@@ -38,56 +42,27 @@ describe("CreateMagicLinkUseCase", () => {
       email: faker.internet.email().toLowerCase(),
     };
 
-    const userDb: User = {
-      id: faker.number.int(),
-      email: input.email,
-      name: faker.person.fullName(),
-      bio: faker.person.bio(),
-    };
+    const userDb = new User(
+      faker.number.int(),
+      faker.person.fullName(),
+      faker.person.bio(),
+      input.email,
+    );
 
     it("should create a magic link", async () => {
       vi.spyOn(usersRepository, "findByEmail").mockResolvedValueOnce(userDb);
-      vi.spyOn(magicLinkRepository, "createMagicLink").mockResolvedValueOnce();
-      vi.spyOn(magicLinkRepository, "deleteMagicLink").mockResolvedValueOnce();
+      vi.spyOn(createMagicLinkService, "execute").mockResolvedValueOnce({
+        magicLink: faker.internet.url(),
+      });
 
       const result = await useCase.execute(input);
 
       expect(result).toStrictEqual({
         magicLink: expect.stringMatching(/^https?:\/\/./u),
       });
-      expect(magicLinkRepository.deleteMagicLink).not.toHaveBeenCalled();
-      expect(magicLinkRepository.createMagicLink).toHaveBeenCalledWith(
-        userDb,
-        expect.any(String),
-      );
-    });
-
-    it("should create a magic link and delete the previous", async () => {
-      const magicLinkDb = {
-        token: "token",
+      expect(createMagicLinkService.execute).toHaveBeenCalledWith({
         user: userDb,
-        createdAt: new Date(),
-      };
-
-      vi.spyOn(usersRepository, "findByEmail").mockResolvedValueOnce(userDb);
-      vi.spyOn(magicLinkRepository, "findByEmail").mockResolvedValueOnce(
-        magicLinkDb,
-      );
-      vi.spyOn(magicLinkRepository, "createMagicLink").mockResolvedValueOnce();
-      vi.spyOn(magicLinkRepository, "deleteMagicLink").mockResolvedValueOnce();
-
-      const result = await useCase.execute(input);
-
-      expect(result).toStrictEqual({
-        magicLink: expect.stringMatching(/^https?:\/\/./u),
       });
-      expect(magicLinkRepository.deleteMagicLink).toHaveBeenCalledWith(
-        magicLinkDb.token,
-      );
-      expect(magicLinkRepository.createMagicLink).toHaveBeenCalledWith(
-        userDb,
-        expect.any(String),
-      );
     });
 
     it("should not create a magic link if the user does not exist", async () => {
@@ -97,8 +72,7 @@ describe("CreateMagicLinkUseCase", () => {
         new UserByEmailNotFoundError(input.email),
       );
 
-      expect(magicLinkRepository.deleteMagicLink).not.toHaveBeenCalled();
-      expect(magicLinkRepository.createMagicLink).not.toHaveBeenCalled();
+      expect(createMagicLinkService.execute).not.toHaveBeenCalled();
     });
   });
 
@@ -111,8 +85,7 @@ describe("CreateMagicLinkUseCase", () => {
       await expect(useCase.execute(input)).rejects.toThrow(ZodError);
 
       expect(usersRepository.findByEmail).not.toHaveBeenCalled();
-      expect(magicLinkRepository.deleteMagicLink).not.toHaveBeenCalled();
-      expect(magicLinkRepository.createMagicLink).not.toHaveBeenCalled();
+      expect(createMagicLinkService.execute).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { MagicLinkRepository } from "../../../core/magic-link/repository/magic-link.repository";
+import { CreateMagicLinkService } from "../../../core/magic-link/services/create-magic-link.service";
 import { CreateMagicLinkUseCase } from "../../../core/magic-link/use-case/create-magic-link.user-case";
 import {
   SignInMagicLinkInput,
@@ -19,10 +20,12 @@ export class MagicLinkController {
   constructor(
     readonly usersRepository: UsersRepository,
     readonly magicLinkRepository: MagicLinkRepository,
+    createMagicLinkService: CreateMagicLinkService,
   ) {
     this.createMagicLinkUseCase = new CreateMagicLinkUseCase(
       usersRepository,
       magicLinkRepository,
+      createMagicLinkService,
     );
     this.signInMagicLinkUseCase = new SignInMagicLinkUseCase(
       magicLinkRepository,

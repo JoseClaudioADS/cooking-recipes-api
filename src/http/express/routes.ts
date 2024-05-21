@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { CreateMagicLinkService } from "../../core/magic-link/services/create-magic-link.service";
 import { db } from "../../infra/db/drizzle-db";
 import { DrizzleMagicLinkRepository } from "../../infra/repository/drizzle-magic-link.repository";
 import { DrizzlePhotosRepository } from "../../infra/repository/drizzle-photos.repository";
@@ -17,12 +18,17 @@ const magicLinkRepository = new DrizzleMagicLinkRepository(db);
 const recipesRepository = new DrizzleRecipesRepository(db);
 const photosRepository = new DrizzlePhotosRepository(db);
 
+const createMagicLinkService = new CreateMagicLinkService(magicLinkRepository);
 const uploadService = new LocalUploadService();
 
-const usersController = new UsersController(usersRepository);
+const usersController = new UsersController(
+  usersRepository,
+  createMagicLinkService,
+);
 const magicLinkController = new MagicLinkController(
   usersRepository,
   magicLinkRepository,
+  createMagicLinkService,
 );
 const recipesController = new RecipesController(
   recipesRepository,
