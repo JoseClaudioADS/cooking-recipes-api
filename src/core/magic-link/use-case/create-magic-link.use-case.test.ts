@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { ZodError } from "zod";
+import { usersRepositoryMock } from "../../../../tests/mocks/users-repository.mock";
 import { User } from "../../users/entity/user";
 import { UserByEmailNotFoundError } from "../../users/errors/user-by-email-not-found.error";
 import { UsersRepository } from "../../users/repository/users.repository";
@@ -18,9 +19,7 @@ describe("CreateMagicLinkUseCase", () => {
   let createMagicLinkService: CreateMagicLinkService;
 
   beforeAll(() => {
-    usersRepository = {
-      findByEmail: vi.fn(),
-    } as unknown as UsersRepository;
+    usersRepository = usersRepositoryMock;
 
     createMagicLinkService = {
       execute: vi.fn(),
