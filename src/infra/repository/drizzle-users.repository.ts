@@ -41,11 +41,6 @@ export class DrizzleUsersRepository implements UsersRepository {
       return null;
     }
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      bio: user.bio,
-    };
+    return new User(user.id, user.name, user.bio, user.email);
   }
 }

@@ -24,7 +24,6 @@ export class MagicLinkController {
   ) {
     this.createMagicLinkUseCase = new CreateMagicLinkUseCase(
       usersRepository,
-      magicLinkRepository,
       createMagicLinkService,
     );
     this.signInMagicLinkUseCase = new SignInMagicLinkUseCase(
@@ -44,7 +43,7 @@ export class MagicLinkController {
     );
 
     res.cookie(constants.TOKEN_COOKIE_NAME, result.token, {
-      httpOnly: true,
+      httpOnly: env.NODE_ENV === "production",
       secure: env.NODE_ENV === "production",
       sameSite: true,
     });

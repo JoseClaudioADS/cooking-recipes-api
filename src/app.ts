@@ -8,13 +8,19 @@ import morgan from "morgan";
 import { join } from "path";
 import errorHandler from "./http/express/error.handler";
 import appRouter from "./http/express/routes";
+import env from "./utils/env";
 import logger from "./utils/logger";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors()); // TODO: Configure for production
+app.use(
+  cors({
+    credentials: true,
+    origin: env.WEB_URL,
+  }),
+); // TODO: Configure for production
 app.use(morgan("common"));
 app.use(cookieParser());
 app.use(fileUpload());

@@ -1,7 +1,6 @@
 import * as z from "zod";
 import { UserByEmailNotFoundError } from "../../users/errors/user-by-email-not-found.error";
 import { UsersRepository } from "../../users/repository/users.repository";
-import { MagicLinkRepository } from "../repository/magic-link.repository";
 import { CreateMagicLinkService } from "../services/create-magic-link.service";
 
 const createMagicLinkSchema = z.object({
@@ -23,7 +22,6 @@ export type CreateMagicLinkOutput = {
 export class CreateMagicLinkUseCase {
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly magicLinkRepository: MagicLinkRepository,
     private readonly createMagicLinkService: CreateMagicLinkService,
   ) {}
 
